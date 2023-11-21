@@ -1,4 +1,4 @@
-#include "SMDRed.h"
+#include "Acrome-SMD.h"
 
 int baudrate = 115200;
 
