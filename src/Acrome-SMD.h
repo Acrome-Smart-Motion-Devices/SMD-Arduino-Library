@@ -1,5 +1,5 @@
-#ifndef __ACROME-SMD_H_
-#define __ACROME-SMD_H_
+#ifndef ACROME_SMD_H
+#define ACROME_SMD_H
 
 #include "Arduino.h"
 #include "stdint.h"

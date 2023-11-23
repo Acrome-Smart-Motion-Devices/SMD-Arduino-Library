@@ -1,4 +1,4 @@
-#include "SMDRed.h"
+#include "Acrome-SMD.h"
 #include "string.h"
 
 #define DEBUG_EN (0)
@@ -40,9 +40,8 @@ String sensorTypes[] = {
     "SERVO",
     "POTANTIOMETER",
     "RGB",
-    "IMU"};
-
-
+    "IMU"
+    };
 
 union converter
 {
@@ -810,7 +809,7 @@ void Red::printAvailableSensors(HardwareSerial &port)
 uint8_t Red::getButton(int buttonID)
 {
     if(!_checkModuleID(buttonID)){
-        return;
+        return 0;
     }
     uint8_t ProtocolID = iButton_1 + buttonID -1;
 
@@ -843,7 +842,7 @@ uint8_t Red::getButton(int buttonID)
 uint16_t Red::getLight(int lightID)
 {
     if(!_checkModuleID(lightID)){
-        return;
+        return 0;
     }
     uint8_t ProtocolID = iLight_1 + lightID -1;
 
@@ -898,7 +897,7 @@ void Red::setBuzzer(int buzzerID, uint8_t enable)
 uint8_t Red::getJoystickButton(int joystickID)
 {
     if(!_checkModuleID(joystickID)){
-        return;
+        return 0;
     }
     uint8_t ProtocolID = iJoystick_1 + joystickID -1;
 
@@ -1087,7 +1086,7 @@ float Red::getPitchAngle(int IMU_ID)
 uint16_t Red::getDistance(int distanceID)
 {
     if(!_checkModuleID(distanceID)){
-        return;
+        return 0;
     }
     uint8_t ProtocolID = iDistance_1 + distanceID -1;
 
@@ -1120,7 +1119,7 @@ uint16_t Red::getDistance(int distanceID)
 uint8_t Red::getQTR(int qtrID)
 {
     if(!_checkModuleID(qtrID)){
-        return;
+        return 0;
     }
     uint8_t ProtocolID = iQTR_1 + qtrID -1;
 
@@ -1189,7 +1188,7 @@ uint8_t Red::getPotentiometer(int potentiometerID)
 void Red::setRGB(int rgbID, uint8_t color)
 {
     if(!_checkModuleID(rgbID)){
-        return 0;
+        return;
     }
     uint8_t ProtocolID = iRGB_1 + rgbID -1;
 
@@ -1265,3 +1264,4 @@ uint32_t Red::getHardwareVersion()
 
     return 0;
 }
+
