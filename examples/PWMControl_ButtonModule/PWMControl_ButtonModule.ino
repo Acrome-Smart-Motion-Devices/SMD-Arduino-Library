@@ -1,13 +1,15 @@
 // ---------------------------------------------------------------------------
-//  Example of Acrome SMD Red Position Control with Arduino.
+//  Example of Acrome SMD Red PWM Control with Button Module and Arduino.
 //
 //  This code allows the DC brushed motor attached to the 
-//  SMD-Red(Smart Motor Driver - Red) to reach %90 duty cylces percents in two directions
+//  SMD-Red (Smart Motor Driver - Red) to reach %90 duty cycles in two directions
 //  at regular time intervals, continuously repeating the specified sequence.
 //
-//  Example Code by : Berat Eren Dogan / Acrome Robotics
+//  It also integrates a Button Module for controlling the motor movement.
+//
+//  Example Code by: Berat Eren Dogan / Acrome Robotics
 // ---------------------------------------------------------------------------
-//  WARNING: To run this code make sure you have the following hardware components:
+//  WARNING: To run this code, make sure you have the following hardware components:
 //
 //  1. SMD (Smart Motor Driver - Red): Ensure that the SMD is properly connected and powered.
 //
@@ -15,10 +17,10 @@
 //
 //  3. DC Motor: Connect the DC Motor to the SMD. Check the motor specifications for proper wiring.
 //
-//  NOTE: Please set the correct values for CPR (Counts Per Revolution) and RPM (Revolutions Per Minute) based on your specific motor. Update the 'CPR' and 'RPM' variables in the code accordingly.
-//  
-//  IMPORTANT: Do not have the Gateway attached to your Arduino when uploading the code. Only attach the Gateway after the code upload is complete.
-//  This is crucial for proper initialization. Once the code is uploaded, attach the Gateway and establish the connection with the SMD as required.
+//  4. Button Module: Connect the Button Module to the SMD. Update the 'buttonModuleID' variable in the code according to the module's ID selection.
+//
+//  IMPORTANT: Do not have the Gateway attached to your Arduino when uploading the code. Only attach the Gateway after the code upload is complete. This is crucial for proper initialization.
+//  Once the code is uploaded, attach the Gateway and establish the connection with the SMD as required.
 //
 //  If you encounter any issues, refer to the documentation of your hardware components for troubleshooting steps.
 // ---------------------------------------------------------------------------
@@ -28,27 +30,27 @@
 #define BAUDRATE    115200
 #define ID          0
 
+int buttonModuleID = 0;
 
 Red red1(ID, Serial, BAUDRATE);
+int dutycylce = 0;
 
 void setup() {
   red1.begin(); 
   red1.setOperationMode(PWMControl); // setting operation mode to position
   red1.torqueEnable(1);
+
+  red1.scanModules();
+  delay(50);
 }
 
 void loop() {
   // It continuously changes the pwm setpoint(duty cycle percent) at regular time intervals.
-  for(int i = 0; i <= 9 ; i++){
-    red1.setpoint(PWM, i*10);
-    delay(100);
+  if(red1.getButton(buttonModuleID)){
+    dutycylce += 3;
+    if(dutycylce > 90){
+      dutycylce = 0;
+    }
   }
-  for(int i = ; i <= -9 ; i--){
-    red1.setpoint(PWM, i*10);
-    delay(100);
-  }
-  for(int i = -9; i <= 0 ; i++){
-    red1.setpoint(PWM, i*10);
-    delay(100);
-  }
+  red1.setpoint(PWMControl,dutycylce);
 }
