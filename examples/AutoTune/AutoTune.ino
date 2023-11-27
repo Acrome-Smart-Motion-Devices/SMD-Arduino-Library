@@ -42,11 +42,4 @@ void setup() {
 
 void loop() {
     // There is no continuous operation in progress.
-
-
-
-
-
-
-
 }

@@ -34,10 +34,10 @@
 
 float RPM = 100;
 float CPR = 4741;
-int potID = 0;
+int rgbID = 0;
 
 Red red1(ID, Serial, BAUDRATE);
-uint8_t potVal = 0;
+float step = 1000.0;
 
 void setup() {
   red1.begin(); 
@@ -53,8 +53,30 @@ void setup() {
 }
 
 void loop() {
-  // It continuously changes the position by potantiometer value.
-  potVal = getPotentiometer(potID);
-  red1.setpoint(PositionControl, potVal);
-  delay(50);
+  // It continuously changes the position and sets rgb module with colors.
+  red1.setpoint(PositionControl, 0*step);
+  delay(1000);
+  red1.setRGB(0, RED);
+  
+  red1.setpoint(PositionControl, 1*step);
+  delay(1000);
+  red1.setRGB(0, GREEN);
+
+  red1.setpoint(PositionControl, 2*step);
+  delay(1000);
+  red1.setRGB(0, BLUE);
+
+  red1.setpoint(PositionControl, 3*step);
+  delay(1000);
+  red1.setRGB(0, WHITE);
+
+  red1.setpoint(PositionControl, 1*step);
+  delay(1000);
+  red1.setRGB(0, GREEN);
+
+  red1.setpoint(PositionControl, 4*step);
+  delay(2000);
+  red1.setRGB(0, NO_COLOR);
+  
+
 }
