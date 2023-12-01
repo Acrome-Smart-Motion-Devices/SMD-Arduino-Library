@@ -37,7 +37,7 @@ void setup() {
   red1.begin(); 
   red1.setMotorRPM(RPM); 
   red1.setMotorCPR(CPR);
-  red1.tune() // The Auto Tune proccess begins. You must wait until the tuning is  finished.
+  red1.tune(); // The Auto Tune proccess begins. You must wait until the tuning is  finished.
 }
 
 void loop() {

@@ -40,15 +40,15 @@ void setup() {
 void loop() {
   // It continuously changes the pwm setpoint(duty cycle percent) at regular time intervals.
   for(int i = 0; i <= 9 ; i++){
-    red1.setpoint(PWM, i*10);
+    red1.setpoint(PWMControl, i*10);
     delay(100);
   }
-  for(int i = ; i <= -9 ; i--){
-    red1.setpoint(PWM, i*10);
+  for(int i = 9; i >= -9 ; i--){
+    red1.setpoint(PWMControl, i*10);
     delay(100);
   }
   for(int i = -9; i <= 0 ; i++){
-    red1.setpoint(PWM, i*10);
+    red1.setpoint(PWMControl, i*10);
     delay(100);
   }
 }

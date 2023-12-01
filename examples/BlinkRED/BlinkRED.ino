@@ -20,9 +20,6 @@
 #define BAUDRATE    115200
 #define ID          0
 
-float RPM = 100;
-float CPR = 4741;
-
 Red red1(ID, Serial, BAUDRATE);
 
 void setup() {

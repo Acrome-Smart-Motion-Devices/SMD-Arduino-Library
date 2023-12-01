@@ -159,24 +159,34 @@ typedef enum{
 }tSensors;
 
 
-//for rgb sensor.
-typedef enum{
-    NO_COLOR = 0,
-    RED,
-    GREEN,
-    BLUE,
-    WHITE,
-    YELLOW,
-    CYAN,
-    MAGENTA,
-    ORANGE,
-    PURPLE,
-    PINK,
-    AMBER,
-    TEAL,
-    INDIGO
-}tColors;
+// for rgb sensor.
 
+typedef enum{
+  NOCOLOR = 0,
+  RED,
+  GREEN,
+  BLUE,
+} tColors;
+
+
+/*
+typedef enum{
+  NO_COLOR = 0,
+  RED,
+  GREEN,
+  BLUE,
+  WHITE,
+  YELLOW,
+  CYAN,
+  MAGENTA,
+  ORANGE,
+  PURPLE,
+  PINK,
+  AMBER,
+  TEAL,
+  INDIGO
+} tColors;
+*/
 // one smd tests    = $
 // multi smd tests  = &
 

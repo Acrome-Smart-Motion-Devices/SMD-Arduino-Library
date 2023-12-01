@@ -40,20 +40,20 @@ void setup() {
   red1.setMotorCPR(CPR);
 
   red1.setOperationMode(VelocityControl); // setting operation mode to position
-  red1.setControlParameters(VelocityControl, 10, 1, 0, 0, 5) // setting pid and other control parameters of position control mode.
+  red1.setControlParameters(VelocityControl, 10, 1, 0, 0, 5); // setting pid and other control parameters of position control mode.
   red1.torqueEnable(1);
 }
 
 void loop() {
   // It continuously changes the velocity(rpm) setpoint at regular time intervals.
   red1.setpoint(VelocityControl, 0);
-  delay(1000);
+  delay(1500);
   red1.setpoint(VelocityControl, RPM*0.25);
-  delay(5000);
+  delay(1500);
   red1.setpoint(VelocityControl, RPM*0.5);
-  delay(5000);
+  delay(1500);
   red1.setpoint(VelocityControl, RPM*0.75);
-  delay(5000);
+  delay(1500);
   red1.setpoint(VelocityControl, RPM*0.9);
-  delay(5000);
+  delay(1500);
 }

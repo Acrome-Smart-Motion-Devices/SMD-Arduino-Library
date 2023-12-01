@@ -32,6 +32,7 @@ float RPM = 100;
 float CPR = 4741;
 
 Red red1(ID, Serial, BAUDRATE);
+float step = 1000.0;
 
 void setup() {
   red1.begin(); 
@@ -40,7 +41,7 @@ void setup() {
   red1.setMotorCPR(CPR);
 
   red1.setOperationMode(PositionControl); // setting operation mode to position
-  red1.setControlParameters(PositionControl, 10, 0, 1, 0, 5) // setting pid and other control parameters of position control mode.
+  red1.setControlParameters(PositionControl, 10, 0, 1, 0, 5); // setting pid and other control parameters of position control mode.
   red1.torqueEnable(1);
 }
 
@@ -48,10 +49,10 @@ void loop() {
   // It continuously changes the position at regular time intervals.
   red1.setpoint(PositionControl, 0);
   delay(1000);
-  red1.setpoint(PositionControl, 3000);
+  red1.setpoint(PositionControl, 3*step);
   delay(1000);
   red1.setpoint(PositionControl, 0);
   delay(1000);
-  red1.setpoint(PositionControl, -2000);
+  red1.setpoint(PositionControl, -2*step);
   delay(1000);
 }
