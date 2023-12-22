@@ -872,7 +872,7 @@ uint16_t Red::getLight(int lightID)
     return 0;
 }
 
-void Red::setBuzzer(int buzzerID, uint8_t enable)
+void Red::setBuzzer(int buzzerID, uint32_t frequency)
 {
     if(!_checkModuleID(buzzerID)){
         return;
@@ -883,12 +883,12 @@ void Red::setBuzzer(int buzzerID, uint8_t enable)
     _data[iHeader] = HEADER;
     _data[iDeviceID] = _devId;
     _data[iDeviceFamily] = DEVICE_FAMILY;
-    _data[iPackageSize] = CONSTANT_REG_SIZE + 2;
+    _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(uint32_t) + 1);
     _data[iCommand] = WRITE;
     _data[iStatus] = 0x00;
 
     _data[DATA(0)] = ProtocolID;
-    _data[DATA(1)] = enable;
+    _data[DATA(1)] = frequency;
 
     _addCRC();
     _write2serial();
@@ -1185,17 +1185,18 @@ uint8_t Red::getPotentiometer(int potentiometerID)
 
 }
 
-void Red::setRGB(int rgbID, uint8_t color)
+void Red::setRGB(int rgbID, uint8_t red, uint8_t green, uint8_t blue)
 {
     if(!_checkModuleID(rgbID)){
         return;
     }
     uint8_t ProtocolID = iRGB_1 + rgbID -1;
+    uint32_t color = red + green*(2**8) + blue*(2**16);
 
     _data[iHeader] = HEADER;
     _data[iDeviceID] = _devId;
     _data[iDeviceFamily] = DEVICE_FAMILY;
-    _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(uint8_t) + 1) * 1;
+    _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(uint32_t) + 1) * 1;
     _data[iCommand] = WRITE;
     _data[iStatus] = 0x00;
 

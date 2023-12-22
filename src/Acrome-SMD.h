@@ -229,17 +229,17 @@ class Red {
     void printAvailableSensors(HardwareSerial &port);                                               //$
 
     // Set
-    void setBuzzer(int buzzerID, uint8_t enable); //$
-    void setServo(int servoID, uint8_t ctrl);     //$
-    void setRGB(int rgbID, uint8_t color);        //$
+    void setBuzzer(int buzzerID, uint32_t frequency);                 //$
+    void setServo(int servoID, uint8_t ctrl);                         //$
+    void setRGB(int rgbID, uint8_t red, uint8_t green, uint8_t blue); //$
 
     // Get
     uint8_t   getButton(int buttonID);      //$
     uint16_t  getLight(int lightID);        //$
 
-    float     getJoystickX(int joystickID); //$
-    float     getJoystickY(int joystickID); //$
-    uint8_t   getJoystickButton(int joystickID); //$
+    float     getJoystickX(int joystickID);       //$
+    float     getJoystickY(int joystickID);       //$
+    uint8_t   getJoystickButton(int joystickID);  //$
                                            
     uint16_t  getDistance(int distanceID);  //$
     uint8_t   getQTR(int qtrID);            //$?
