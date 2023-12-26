@@ -247,7 +247,7 @@ Red::Red(uint8_t ID, HardwareSerial &port, uint32_t baudrate)
     _timeout = BUS_TIMEOUT;
     _port = &port;
     _baudrate = baudrate;
-    _delayMicros = (105000000U / baudrate); // 1 One byte long delay time + %5 for safety
+    _delayMicros = (120000000U / baudrate); // updated. ====//==== _delayMicros = (105000000U / baudrate);  1 One byte long delay time + %5 for safety
 }
 
 bool Red::Ping()
