@@ -888,7 +888,7 @@ void Red::setBuzzer(int buzzerID, uint32_t frequency)
     _data[iStatus] = 0x00;
 
     _data[DATA(0)] = ProtocolID;
-    _data[DATA(1)] = frequency;
+    _addU32(DATA(1), frequency);
 
     _addCRC();
     _write2serial();
@@ -1191,17 +1191,19 @@ void Red::setRGB(int rgbID, uint8_t red, uint8_t green, uint8_t blue)
         return;
     }
     uint8_t ProtocolID = iRGB_1 + rgbID -1;
-    uint32_t color = red + green*(2**8) + blue*(2**16);
+    
+    
+    uint32_t color = red + (green << 8) + (blue << 16);
 
     _data[iHeader] = HEADER;
     _data[iDeviceID] = _devId;
     _data[iDeviceFamily] = DEVICE_FAMILY;
-    _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(uint32_t) + 1) * 1;
+    _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(uint32_t) + 1);
     _data[iCommand] = WRITE;
     _data[iStatus] = 0x00;
 
     _data[DATA(0)] = ProtocolID;
-    _data[DATA(1)] = color;
+    _addU32(DATA(1), color);
 
     _addCRC();
     _write2serial();
