@@ -1192,8 +1192,11 @@ void Red::setRGB(int rgbID, uint8_t red, uint8_t green, uint8_t blue)
     }
     uint8_t ProtocolID = iRGB_1 + rgbID -1;
     
+    uint32_t u_red = red;
+    uint32_t u_green = green;
+    uint32_t u_blue = blue;
     
-    uint32_t color = red + (green << 8) + (blue << 16);
+    uint32_t color = u_red + (u_green << 8) + (u_blue << 8*2);
 
     _data[iHeader] = HEADER;
     _data[iDeviceID] = _devId;
