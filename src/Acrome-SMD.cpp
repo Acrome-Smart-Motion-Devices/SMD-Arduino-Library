@@ -914,20 +914,20 @@ uint8_t Red::getJoystickButton(int joystickID)
 
     _write2serial();
 
-    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(float))* 2 + sizeof(uint8_t) + 1) == true)
+    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(int32_t))* 2 + sizeof(uint8_t) + 1) == true)
     {
         if ((_checkCRC() == true) && (headerCheck(_devId, READ) == true))
         {
             if (_data[DATA(0)] == ProtocolID)
             {
-                return _data[DATA((sizeof(float) * 2 + 1))];
+                return _data[DATA((sizeof(int32_t) * 2 + 1))];
             }
         }
     }
     return 0;
 }
 
-float Red::getJoystickX(int joystickID)
+int32_t Red::getJoystickX(int joystickID)
 {
     if(!_checkModuleID(joystickID)){
         return 0;
@@ -947,20 +947,21 @@ float Red::getJoystickX(int joystickID)
 
     _write2serial();
 
-    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(float))* 2 + sizeof(uint8_t) + 1) == true)
+    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(int32_t))* 2 + sizeof(uint8_t) + 1) == true)
     {
         if ((_checkCRC() == true) && (headerCheck(_devId, READ) == true))
         {
             if (_data[DATA(0)] == ProtocolID)
             {
-                return _getFloat(DATA(1));
+                int32_t returning = _getU32(DATA(1));
+                return returning;
             }
         }
     }
     return 0;
 }
 
-float Red::getJoystickY(int joystickID)
+int32_t Red::getJoystickY(int joystickID)
 {
     if(!_checkModuleID(joystickID)){
         return 0;
@@ -980,13 +981,14 @@ float Red::getJoystickY(int joystickID)
 
     _write2serial();
 
-    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(float))* 2 + sizeof(uint8_t) + 1) == true)
+    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(int32_t))* 2 + sizeof(uint8_t) + 1) == true)
     {
         if ((_checkCRC() == true) && (headerCheck(_devId, READ) == true))
         {
             if (_data[DATA(0)] == ProtocolID)
             {
-                return _getFloat(DATA(1 + sizeof(float)));
+                int32_t returning = _getU32(DATA(1 + sizeof(int32_t)));
+                return returning;
             }
         }
     }

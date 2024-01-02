@@ -237,8 +237,8 @@ class Red {
     uint8_t   getButton(int buttonID);      //$
     uint16_t  getLight(int lightID);        //$
 
-    float     getJoystickX(int joystickID);       //$
-    float     getJoystickY(int joystickID);       //$
+    int32_t     getJoystickX(int joystickID);    //$
+    int32_t     getJoystickY(int joystickID);    //$
     uint8_t   getJoystickButton(int joystickID);  //$
                                            
     uint16_t  getDistance(int distanceID);  //$
