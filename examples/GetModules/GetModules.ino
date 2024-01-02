@@ -29,14 +29,14 @@
 #define BAUDRATE    115200
 #define ID          0 
 
-int ModuleIDs = 0;
+int ModuleIDs = 1;
 
-Red red1(ID, Serial, BAUDRATE);
+Red myRed(ID, Serial, BAUDRATE);
 
 int buttonVal = 0;
 int lightVal  = 0;
-float JoystickVal_x = 0;
-float JoystickVal_y = 0;
+int JoystickVal_x = 0;
+int JoystickVal_y = 0;
 int JoystickVal_button  = 0;
 int distanceVal = 0;
 int QTRVal  = 0;
@@ -45,28 +45,35 @@ float Roll_IMU  = 0;
 float Pitch_IMU = 0;
 
 void setup() {
-  red1.begin();
-  red1.scanModules();
-  red1.printAvailableSensors(Serial);
+  myRed.begin();
+  myRed.scanModules();
+  myRed.printAvailableSensors(Serial);
 }
 
 void loop() {
-  buttonVal =   getButton(ModuleIDs);
-  lightVal  = getLight(ModuleIDs);
+  //  Button Module get
+  buttonVal =   myRed.getButton(ModuleIDs);
+  //  Ambient Light Module get
+  lightVal  = myRed.getLight(ModuleIDs);
+  //  Joystick Module get
+  JoystickVal_x =  myRed.getJoystickX(ModuleIDs);
+  JoystickVal_y =  myRed.getJoystickY(ModuleIDs);
+  JoystickVal_button = myRed.getJoystickButton(ModuleIDs);
+  //  Distance Module get
+  distanceVal = myRed.getDistance(ModuleIDs);
+  //  Reflectance Module get
+  QTRVal = myRed.getQTR(ModuleIDs);
+  //  Potantiometer Module get
+  potanitometerVal = myRed.getPotentiometer(ModuleIDs);
+  //  IMU Module get
+  Roll_IMU = myRed.getRollAngle(ModuleIDs);
+  Pitch_IMU = myRed.getPitchAngle(ModuleIDs);
 
-  JoystickVal_x =  getJoystickX(ModuleIDs);
-  JoystickVal_y =  getJoystickY(ModuleIDs);
-  JoystickVal_button = getJoystickButton(ModuleIDs);
-                                           
-  distanceVal = getDistance(ModuleIDs);
-  QTRVal = getQTR(ModuleIDs);
-  potanitometerVal = getPotentiometer(ModuleIDs);
-
-  Roll_IMU = getRollAngle(ModuleIDs);
-  Pitch_IMU = getPitchAngle(ModuleIDs);
   delay(50);
 
   // You can use similar statements to print values for other modules.
-  Serial.println("Button Value = " + buttonVal);
+  Serial.println(JoystickVal_x);
+  Serial.println(JoystickVal_y);
+  Serial.println(JoystickVal_button);
   
 }
