@@ -1,82 +1,78 @@
+###################################
+# Syntax Coloring Map For Acrome-SMD
+###################################
 
-#######################################
+###################################
 # Datatypes (KEYWORD1)
-#######################################
-Red KEYWORD1
+###################################
 
+Red	KEYWORD1
 
-
-#######################################
+###################################
 # Methods and Functions (KEYWORD2)
-#######################################
-begin   KEYWORD2
-end KEYWORD2
-Ping    KEYWORD2                                                                       
-FactoryReset    KEYWORD2
-Reboot  KEYWORD2
-EEPROMWrite KEYWORD2
+###################################
 
-getSoftwareVersion  KEYWORD2
-getHardwareVersion  KEYWORD2
+begin	KEYWORD2
+end	KEYWORD2
+Ping	KEYWORD2                                                                       
+FactoryReset	KEYWORD2
+Reboot	KEYWORD2
+EEPROMWrite	KEYWORD2
+getSoftwareVersion	KEYWORD2
+getHardwareVersion	KEYWORD2
+setControlParameters	KEYWORD2
+setpoint	KEYWORD2
+setPositionLimits	KEYWORD2
+setVelocityLimit	KEYWORD2
+setTorqueLimit	KEYWORD2
+tune	KEYWORD2
+setMotorCPR	KEYWORD2
+setMotorRPM	KEYWORD2
+torqueEnable	KEYWORD2
+setOperationMode	KEYWORD2
+setBaudrate	KEYWORD2
+setDeviceID	KEYWORD2
+setTimeout	KEYWORD2
+getPosition	KEYWORD2
+getVelocity	KEYWORD2
+getTorque	KEYWORD2
+getAnalogPort	KEYWORD2
+scanModules	KEYWORD2
+printAvailableSensors	KEYWORD2
+setBuzzer	KEYWORD2
+setServo	KEYWORD2
+setRGB	KEYWORD2
+getButton	KEYWORD2
+getLight	KEYWORD2
+getJoystickX	KEYWORD2
+getJoystickY	KEYWORD2
+getJoystickButton	KEYWORD2                                 
+getDistance	KEYWORD2
+getQTR	KEYWORD2
+getPotentiometer	KEYWORD2
+getRollAngle	KEYWORD2
+getPitchAngle	KEYWORD2
 
-setControlParameters    KEYWORD2
-setpoint    KEYWORD2
-setPositionLimits   KEYWORD2
-setVelocityLimit    KEYWORD2
-setTorqueLimit  KEYWORD2
-tune    KEYWORD2
-setMotorCPR KEYWORD2
-setMotorRPM KEYWORD2
-torqueEnable    KEYWORD2
-setOperationMode    KEYWORD2
-setBaudrate KEYWORD2
-setDeviceID KEYWORD2
-setTimeout  KEYWORD2
-
-getPosition KEYWORD2
-getVelocity KEYWORD2
-getTorque   KEYWORD2
-getAnalogPort   KEYWORD2
-scanModules KEYWORD2
-printAvailableSensors   KEYWORD2
-
-setBuzzer   KEYWORD2
-setServo    KEYWORD2
-setRGB  KEYWORD2
-
-getButton   KEYWORD2
-getLight    KEYWORD2
-getJoystickX    KEYWORD2
-getJoystickY    KEYWORD2
-getJoystickButton   KEYWORD2                                 
-getDistance KEYWORD2
-getQTR  KEYWORD2
-getPotentiometer    KEYWORD2
-getRollAngle    KEYWORD2
-getPitchAngle   KEYWORD2
-
-
-
-#######################################
+###################################
 # Constants (LITERAL1)
-#######################################
-PWMControl  LITERAL1
-PositionControl LITERAL1
-VelocityControl LITERAL1
-TorqueControl   LITERAL1
+###################################
 
-RED LITERAL1
-GREEN   LITERAL1
-BLUE    LITERAL1
-WHITE   LITERAL1
-YELLOW  LITERAL1
-CYAN    LITERAL1
-MAGENTA LITERAL1
-ORANGE  LITERAL1
-PURPLE  LITERAL1
-PINK    LITERAL1
-AMBER   LITERAL1
-TEAL    LITERAL1
-INDIGO  LITERAL1
+PWMControl	LITERAL1
+PositionControl	LITERAL1
+VelocityControl	LITERAL1
+TorqueControl	LITERAL1
+RED	LITERAL1
+GREEN	LITERAL1
+BLUE	LITERAL1
+WHITE	LITERAL1
+YELLOW	LITERAL1
+CYAN	LITERAL1
+MAGENTA	LITERAL1
+ORANGE	LITERAL1
+PURPLE	LITERAL1
+PINK	LITERAL1
+AMBER	LITERAL1
+TEAL	LITERAL1
+INDIGO	LITERAL1
 
 

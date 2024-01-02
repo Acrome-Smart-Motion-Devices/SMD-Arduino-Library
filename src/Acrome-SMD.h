@@ -1,5 +1,5 @@
-#ifndef __ACROME-SMD_H_
-#define __ACROME-SMD_H_
+#ifndef ACROME_SMD_H
+#define ACROME_SMD_H
 
 #include "Arduino.h"
 #include "stdint.h"
@@ -159,24 +159,34 @@ typedef enum{
 }tSensors;
 
 
-//for rgb sensor.
-typedef enum{
-    NO_COLOR = 0,
-    RED,
-    GREEN,
-    BLUE,
-    WHITE,
-    YELLOW,
-    CYAN,
-    MAGENTA,
-    ORANGE,
-    PURPLE,
-    PINK,
-    AMBER,
-    TEAL,
-    INDIGO
-}tColors;
+// for rgb sensor.
 
+typedef enum{
+  NOCOLOR = 0,
+  RED,
+  GREEN,
+  BLUE,
+} tColors;
+
+
+/*
+typedef enum{
+  NO_COLOR = 0,
+  RED,
+  GREEN,
+  BLUE,
+  WHITE,
+  YELLOW,
+  CYAN,
+  MAGENTA,
+  ORANGE,
+  PURPLE,
+  PINK,
+  AMBER,
+  TEAL,
+  INDIGO
+} tColors;
+*/
 // one smd tests    = $
 // multi smd tests  = &
 
@@ -219,17 +229,17 @@ class Red {
     void printAvailableSensors(HardwareSerial &port);                                               //$
 
     // Set
-    void setBuzzer(int buzzerID, uint8_t enable); //$
-    void setServo(int servoID, uint8_t ctrl);     //$
-    void setRGB(int rgbID, uint8_t color);        //$
+    void setBuzzer(int buzzerID, uint32_t frequency);                 //$
+    void setServo(int servoID, uint8_t ctrl);                         //$
+    void setRGB(int rgbID, uint8_t red, uint8_t green, uint8_t blue); //$
 
     // Get
     uint8_t   getButton(int buttonID);      //$
     uint16_t  getLight(int lightID);        //$
 
-    float     getJoystickX(int joystickID); //$
-    float     getJoystickY(int joystickID); //$
-    uint8_t   getJoystickButton(int joystickID); //$
+    int32_t     getJoystickX(int joystickID);    //$
+    int32_t     getJoystickY(int joystickID);    //$
+    uint8_t   getJoystickButton(int joystickID);  //$
                                            
     uint16_t  getDistance(int distanceID);  //$
     uint8_t   getQTR(int qtrID);            //$?

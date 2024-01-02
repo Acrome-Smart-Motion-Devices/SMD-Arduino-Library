@@ -1,4 +1,4 @@
-#include "SMDRed.h"
+#include "Acrome-SMD.h"
 #include "string.h"
 
 #define DEBUG_EN (0)
@@ -40,9 +40,8 @@ String sensorTypes[] = {
     "SERVO",
     "POTANTIOMETER",
     "RGB",
-    "IMU"};
-
-
+    "IMU"
+    };
 
 union converter
 {
@@ -248,7 +247,7 @@ Red::Red(uint8_t ID, HardwareSerial &port, uint32_t baudrate)
     _timeout = BUS_TIMEOUT;
     _port = &port;
     _baudrate = baudrate;
-    _delayMicros = (105000000U / baudrate); // 1 One byte long delay time + %5 for safety
+    _delayMicros = (120000000U / baudrate); // updated. ====//==== _delayMicros = (105000000U / baudrate);  1 One byte long delay time + %5 for safety
 }
 
 bool Red::Ping()
@@ -810,7 +809,7 @@ void Red::printAvailableSensors(HardwareSerial &port)
 uint8_t Red::getButton(int buttonID)
 {
     if(!_checkModuleID(buttonID)){
-        return;
+        return 0;
     }
     uint8_t ProtocolID = iButton_1 + buttonID -1;
 
@@ -843,7 +842,7 @@ uint8_t Red::getButton(int buttonID)
 uint16_t Red::getLight(int lightID)
 {
     if(!_checkModuleID(lightID)){
-        return;
+        return 0;
     }
     uint8_t ProtocolID = iLight_1 + lightID -1;
 
@@ -873,7 +872,7 @@ uint16_t Red::getLight(int lightID)
     return 0;
 }
 
-void Red::setBuzzer(int buzzerID, uint8_t enable)
+void Red::setBuzzer(int buzzerID, uint32_t frequency)
 {
     if(!_checkModuleID(buzzerID)){
         return;
@@ -884,12 +883,12 @@ void Red::setBuzzer(int buzzerID, uint8_t enable)
     _data[iHeader] = HEADER;
     _data[iDeviceID] = _devId;
     _data[iDeviceFamily] = DEVICE_FAMILY;
-    _data[iPackageSize] = CONSTANT_REG_SIZE + 2;
+    _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(uint32_t) + 1);
     _data[iCommand] = WRITE;
     _data[iStatus] = 0x00;
 
     _data[DATA(0)] = ProtocolID;
-    _data[DATA(1)] = enable;
+    _addU32(DATA(1), frequency);
 
     _addCRC();
     _write2serial();
@@ -898,7 +897,7 @@ void Red::setBuzzer(int buzzerID, uint8_t enable)
 uint8_t Red::getJoystickButton(int joystickID)
 {
     if(!_checkModuleID(joystickID)){
-        return;
+        return 0;
     }
     uint8_t ProtocolID = iJoystick_1 + joystickID -1;
 
@@ -915,20 +914,20 @@ uint8_t Red::getJoystickButton(int joystickID)
 
     _write2serial();
 
-    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(float))* 2 + sizeof(uint8_t) + 1) == true)
+    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(int32_t))* 2 + sizeof(uint8_t) + 1) == true)
     {
         if ((_checkCRC() == true) && (headerCheck(_devId, READ) == true))
         {
             if (_data[DATA(0)] == ProtocolID)
             {
-                return _data[DATA((sizeof(float) * 2 + 1))];
+                return _data[DATA((sizeof(int32_t) * 2 + 1))];
             }
         }
     }
     return 0;
 }
 
-float Red::getJoystickX(int joystickID)
+int32_t Red::getJoystickX(int joystickID)
 {
     if(!_checkModuleID(joystickID)){
         return 0;
@@ -948,20 +947,21 @@ float Red::getJoystickX(int joystickID)
 
     _write2serial();
 
-    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(float))* 2 + sizeof(uint8_t) + 1) == true)
+    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(int32_t))* 2 + sizeof(uint8_t) + 1) == true)
     {
         if ((_checkCRC() == true) && (headerCheck(_devId, READ) == true))
         {
             if (_data[DATA(0)] == ProtocolID)
             {
-                return _getFloat(DATA(1));
+                int32_t returning = _getU32(DATA(1));
+                return returning;
             }
         }
     }
     return 0;
 }
 
-float Red::getJoystickY(int joystickID)
+int32_t Red::getJoystickY(int joystickID)
 {
     if(!_checkModuleID(joystickID)){
         return 0;
@@ -981,13 +981,14 @@ float Red::getJoystickY(int joystickID)
 
     _write2serial();
 
-    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(float))* 2 + sizeof(uint8_t) + 1) == true)
+    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(int32_t))* 2 + sizeof(uint8_t) + 1) == true)
     {
         if ((_checkCRC() == true) && (headerCheck(_devId, READ) == true))
         {
             if (_data[DATA(0)] == ProtocolID)
             {
-                return _getFloat(DATA(1 + sizeof(float)));
+                int32_t returning = _getU32(DATA(1 + sizeof(int32_t)));
+                return returning;
             }
         }
     }
@@ -1087,7 +1088,7 @@ float Red::getPitchAngle(int IMU_ID)
 uint16_t Red::getDistance(int distanceID)
 {
     if(!_checkModuleID(distanceID)){
-        return;
+        return 0;
     }
     uint8_t ProtocolID = iDistance_1 + distanceID -1;
 
@@ -1120,7 +1121,7 @@ uint16_t Red::getDistance(int distanceID)
 uint8_t Red::getQTR(int qtrID)
 {
     if(!_checkModuleID(qtrID)){
-        return;
+        return 0;
     }
     uint8_t ProtocolID = iQTR_1 + qtrID -1;
 
@@ -1186,22 +1187,28 @@ uint8_t Red::getPotentiometer(int potentiometerID)
 
 }
 
-void Red::setRGB(int rgbID, uint8_t color)
+void Red::setRGB(int rgbID, uint8_t red, uint8_t green, uint8_t blue)
 {
     if(!_checkModuleID(rgbID)){
-        return 0;
+        return;
     }
     uint8_t ProtocolID = iRGB_1 + rgbID -1;
+    
+    uint32_t u_red = red;
+    uint32_t u_green = green;
+    uint32_t u_blue = blue;
+    
+    uint32_t color = u_red + (u_green << 8) + (u_blue << 8*2);
 
     _data[iHeader] = HEADER;
     _data[iDeviceID] = _devId;
     _data[iDeviceFamily] = DEVICE_FAMILY;
-    _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(uint8_t) + 1) * 1;
+    _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(uint32_t) + 1);
     _data[iCommand] = WRITE;
     _data[iStatus] = 0x00;
 
     _data[DATA(0)] = ProtocolID;
-    _data[DATA(1)] = color;
+    _addU32(DATA(1), color);
 
     _addCRC();
     _write2serial();
@@ -1265,3 +1272,4 @@ uint32_t Red::getHardwareVersion()
 
     return 0;
 }
+
