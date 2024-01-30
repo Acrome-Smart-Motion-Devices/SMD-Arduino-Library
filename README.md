@@ -149,7 +149,7 @@ For a detailed guide on library functions and usage, please review the full docu
       ```
 
   - ### `Red - FactoryReset()`
-    Resets all variables and memory on the SMD board, including the EEPROM. Sestores the SMD to factory settings.
+    Resets all variables and memory on the SMD board, including the EEPROM. Restores the SMD to factory settings.
       ### Syntax
       #### `myRed.FactoryReset():`
       - `myRed`: a variable of type `Red`
@@ -158,7 +158,7 @@ For a detailed guide on library functions and usage, please review the full docu
 
 
   - ### `Red - Reboot()`
-    The method is designed to reboot the SMD board with which the arduino interacts. If there is a problem in communication between Arduino and SMD board, SMD cannot restart itself.
+    The method is designed to reboot the SMD board with which the Arduino interacts. If there is a problem in communication between Arduino and SMD board, SMD cannot restart itself.
 
     The primary purpose of the `Reboot()` method is to initiate a system reboot on the target SMD board. This action is often required to apply configuration changes or resolve issues without manual intervention.
 
@@ -209,21 +209,21 @@ For a detailed guide on library functions and usage, please review the full docu
       **`Return:`** *None*
 
   - ### `Red - setMotorCPR()`
-    sets the CPR of motor. It is very important to read encoder if you use. Make sure you entered the parameter correctly. Otherwise the calcuations will not work properly.
+    Sets the CPR of motor. It is very important to read encoder if you use. Make sure you entered the parameter correctly. Otherwise, the calculations will not work properly.
       ### Syntax
       #### `myRed.setMotorCPR(cpr)`
       - `myRed` a variable of type `Red`
-      - `cpr` a varaiable of type `float`
+      - `cpr` a variable of type `float`
 
       **`Return:`** *None*
       
 
   - ### `Red - setMotorRPM()`
-    sets the RPM of motor. It is very important to read encoder and drive motor. Make sure you entered the parameter correctly. Otherwise the calcuations will not work properly.
+    Sets the RPM of motor. It is very important to read encoder and drive motor. Make sure you entered the parameter correctly. Otherwise, the calculations will not work properly.
       ### Syntax
       #### `myRed.setMotorRPM(rpm)`
       - `myRed` a variable of type `Red`
-      - `rpm` a varaiable of type `float`
+      - `rpm` a variable of type `float`
 
       **`Return:`** *None*
       ### Example
@@ -294,8 +294,8 @@ For a detailed guide on library functions and usage, please review the full docu
     
     ### Syntax
     #### `myRed.setpoint(mode, setpoint);`
-    - `mode` parameter is a varaible of type `OperationMode`
-    - `setpoint` parameter is a varaible of type `float`
+    - `mode` parameter is a variable of type `OperationMode`
+    - `setpoint` parameter is a variable of type `float`
 
     **`Return:`** *None*
 
@@ -311,7 +311,7 @@ For a detailed guide on library functions and usage, please review the full docu
         myRed.begin(115200);
         delay(5);
         myRed.setOperationMode(PWMControl);
-        myRed.setpoint(setpoint);
+        myRed.setpoint(PWMsetpoint);
         myRed.torqueEnable(1);
       }
       void loop(){}
@@ -339,7 +339,7 @@ For a detailed guide on library functions and usage, please review the full docu
     **`Return:`** *None*
 
   - ### `Red - setTorqueLimit()`
-    Sets the position limits of the SMD. You should set the limits if you drive a motor as positional control.
+    Sets the torque limit of the SMD. You should set the limits if you drive a motor as torque control.
     
     ### Syntax
     #### `myRed.setTorqueLimit(limit);`
@@ -349,7 +349,7 @@ For a detailed guide on library functions and usage, please review the full docu
     **`Return:`** *None*
 
   - ### `Red - torqueEnable()`
-    The Method enables or disables the torque of a motor based on the provided parameter. This method is used to control whether the motor is allowed to rotate.
+    The method enables or disables the torque of a motor based on the provided parameter. This method is used to control whether the motor is allowed to rotate.
 
     - When the parameter is set to 1, the motor's torque is enabled, allowing it to rotate and perform mechanical work.
     - When the parameter is set to 0, the motor's torque is disabled, causing the motor to remain stationary or free-wheel.
@@ -366,7 +366,7 @@ For a detailed guide on library functions and usage, please review the full docu
   - ### `Red - tune()`
     The method activates the autotune task on a specific card and initiates the autotune process. SMD board will set the PID constants after this auto-tuning task.
     
-    The duration of the autotune task may vary depending on the motor installed in the smd card. After this method is used, the SMD does not perform the operations related to driving until the tune task is completed. Communication with the SMD can be continued, but the card does not drive the motor in any way other than the tune function.
+    The duration of the autotune task may vary depending on the motor installed in the SMD card. After this method is used, the SMD does not perform the operations related to driving until the tune task is completed. Communication with the SMD can be continued, but the card does not drive the motor in any way other than the tune function.
     
     Note: when tune method is called, torque enable becomes "1" so motor can rotate.
 
@@ -408,7 +408,7 @@ For a detailed guide on library functions and usage, please review the full docu
     **`Return:`** *None*
 
   - ### `Red - setTimeout()`
-    The method is a function designed to set the communication timeout value for the connected device or board. This function play role in managing the time frame within which communication with the hardware should occur.
+    The method is a function designed to set the communication timeout value for the connected device or board. This function plays role in managing the time frame within which communication with the hardware should occur.
 
     ### Syntax
     #### `myRed.setTimeout(timeout);`
@@ -439,7 +439,7 @@ For a detailed guide on library functions and usage, please review the full docu
     **`Return:`** `float`
 
   - ### `Red - getAnalogPort()`
-    This method serves as a foundational function for controlling servo motors. It enables you to control the position and behavior of a servo motor connected to your system by providing PWM signals to the servo motor.
+    This method reads and returns the connected module's analog signal from the analog port.
 
     ### Syntax
     #### `myRed.getAnalogPort();`
@@ -454,7 +454,7 @@ For a detailed guide on library functions and usage, please review the full docu
 ## SMD Sensor Module Methods
 
   - ### `Red - scanSensors()`
-    The scanSensors() method is used to scan and save information about connected sensors. It's saves ID's and sensor types of connected sensor modules.
+    The scanSensors() method is used to scan and save information about connected sensors. It saves ID's and sensor types of connected sensor modules.
 
     ### Syntax
     #### `myRed.scanSensors();`
@@ -463,8 +463,8 @@ For a detailed guide on library functions and usage, please review the full docu
     **`Return:`** `uint8_t*`:
     This method returns a pointer to an 8-element `uint8_t` array where each bit represents the status of the scanned sensors. Each bit indicates whether a sensor is present or not.
 
-  - ### `availableSensors()`
-    This method prints the connected sensors and their IDs to the arduino's serial monitor, taking from the information recorded in the last scan.
+  - ### `Red - availableSensors()`
+    This method prints the connected sensors and their IDs to the Arduino's serial monitor, taking from the information recorded in the last scan.
     
     Ensure that you have executed the `scanSensors()` method before calling `availableSensors()` to have up-to-date sensor information.
 
@@ -480,7 +480,7 @@ For a detailed guide on library functions and usage, please review the full docu
     - Joystick  : 5
     - RGB       : 2
 
-    this print says 5 sensor modules connected to the SMD. It also shows types and IDs of these modules.
+    this print says 4 sensor modules connected to the SMD. It also shows types and IDs of these modules.
 
   - ### `Red - setServo()`
     The setServo() method is used to control a servo motor connected to the Servo Sensor Module.
@@ -488,8 +488,8 @@ For a detailed guide on library functions and usage, please review the full docu
     ### Syntax
     #### `myRed.setServo(servoID,ctrl);`
     - `myRed`:    a variable of type `Red`
-    - `servoID`:  a varaible of type `int` 
-    - `ctrl` :    a varaible of type `uint8_t`. It's PWM value for servo.
+    - `servoID`:  a variable of type `int` 
+    - `ctrl` :    a variable of type `uint8_t`. It's PWM value for servo.
 
     **`Return:`** `None`
 
@@ -516,19 +516,19 @@ For a detailed guide on library functions and usage, please review the full docu
     ### Syntax
     #### `myRed.setRGB(RGB_ID, color);`
     - `myRed`: a variable of type `Red`
-    - `RGB_ID`: a varaible of type `int`
+    - `RGB_ID`: a variable of type `int`
     - `color`: a variable of type `uint8_t` 
 
     **`Return:`** `None`
 
   - ### `Red - getButton()`
-    This method gets the Button value from button module.
+    This method gets the button value from button module.
     It returns 0 (zero) when not pressed and 1 (one) when pressed.
 
     ### Syntax
     #### `myRed.getButton(buttonID);`
     - `myRed`: a variable of type `Red`
-    - `buttonID`: a varaible of type `int`
+    - `buttonID`: a variable of type `int`
 
     **`Return:`** `uint8_t`
   
@@ -540,7 +540,7 @@ For a detailed guide on library functions and usage, please review the full docu
     ### Syntax
     #### `myRed.getDistance(distanceID);`
     - `myRed`: a variable of type `Red`
-    - `distanceID`: a varaible of type `int`
+    - `distanceID`: a variable of type `int`
 
     **`Return:`** `uint16_t`
 
@@ -550,80 +550,80 @@ For a detailed guide on library functions and usage, please review the full docu
     ### Syntax
     #### `myRed.getLight(lightID);`
     - `myRed`: a variable of type `Red`
-    - `lightID`: a varaible of type `int`
+    - `lightID`: a variable of type `int`
 
     **`Return:`** `uint16_t` unit of Lux
 
 
   - ### `Red - getQTR()`
-    This method gets the qtr module data with given IDs.
+    This method gets the QTR module data with given IDs.
 
     ### Syntax
     #### `myRed.getQTR(QTRID);`
     - `myRed`: a variable of type `Red`
-    - `QTRID`: a varaible of type `int`
+    - `QTRID`: a variable of type `int`
 
     **`Return:`** `float`
 
   - ### `Red - getJoystickX()`
-    It's gets the X analog value from joystick modules with given module IDs.
+    It gets the X analog value from joystick modules with given module IDs.
 
     ### Syntax
     #### `myRed.getJoystickX(joystickID);`
     - `myRed`: a variable of type `Red`
-    - `joystickID`: a varaible of type `int`
+    - `joystickID`: a variable of type `int`
 
     **`Return:`** `float`
 
     `return` 
   - ### `Red - getJoystickY()`
-    It's gets the Y analog value from joystick modules with given module IDs.
+    It gets the Y analog value from joystick modules with given module IDs.
 
     ### Syntax
     #### `myRed.getJoystickY(joystickID);`
     - `myRed`: a variable of type `Red`
-    - `joystickID`: a varaible of type `int`
+    - `joystickID`: a variable of type `int`
 
     **`Return:`** `float`
 
   - ### `Red - getJoystickButton()`
-    It's gets the button value from joystick modules with given module IDs.
+    It gets the button value from joystick modules with given module IDs.
 
     ### Syntax
     #### `myRed.getJoystickButton(joystickID);`
     - `myRed`: a variable of type `Red`
-    - `joystickID`: a varaible of type `int`
+    - `joystickID`: a variable of type `int`
 
     **`Return:`** `uint8_t`
 
   - ### `Red - getPotentiometer()`
-    This method gets the analog value from potantiometer modules with given IDs
+    This method gets the analog value from potentiometer modules with given IDs.
 
     ### Syntax
     #### `myRed.getPotentiometer(potentiometerID);`
     - `myRed`: a variable of type `Red`
-    - `potentiometerID`: a varaible of type `int`
+    - `potentiometerID`: a variable of type `int`
 
     **`Return:`** `uint8_t`
 
 
   - ### `Red - getRollAngle()`
-    This method gets the roll angle data from IMU modules with given IDs
+    This method gets the roll angle data from IMU modules with given IDs.
 
     ### Syntax
     #### `myRed.getRollAngle(iIMU_ID);`
     - `myRed`: a variable of type `Red`
-    - `iIMU_ID`: a varaible of type `int`
+    - `iIMU_ID`: a variable of type `int`
 
     **`Return:`** `float`
 
   - ### `Red - getPitchAngle()`
-    This method gets the roll angle data from IMU modules with given IDs
+    This method gets the roll angle data from IMU modules with given IDs.
 
     ### Syntax
     #### `myRed.getPitchAngle(iIMU_ID);`
     - `myRed`: a variable of type `Red`
-    - `iIMU_ID`: a varaible of type `int`
+    - `iIMU_ID`: a variable of type `int`
 
     **`Return:`** `float`
 
@@ -755,7 +755,7 @@ For a detailed guide on library functions and usage, please review the full docu
   float CPR = 64;
   float RPM = 10000; 
 
-  int torqueSetpoint = 100; //it represents 100 mili amps(mA)
+  int torqueSetpoint = 100; //it represents 100 milliamps(mA)
   
   Red myRed(ID, Serial);
   
