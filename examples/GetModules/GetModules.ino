@@ -40,7 +40,7 @@ int JoystickVal_y = 0;
 int JoystickVal_button  = 0;
 int distanceVal = 0;
 int QTRVal  = 0;
-int potanitometerVal  = 0;
+int potentiometerVal  = 0;
 float Roll_IMU  = 0;
 float Pitch_IMU = 0;
 
@@ -64,7 +64,7 @@ void loop() {
   //  Reflectance Module get
   QTRVal = myRed.getQTR(ModuleIDs);
   //  Potantiometer Module get
-  potanitometerVal = myRed.getPotentiometer(ModuleIDs);
+  potentiometerVal = myRed.getPotentiometer(ModuleIDs);
   //  IMU Module get
   Roll_IMU = myRed.getRollAngle(ModuleIDs);
   Pitch_IMU = myRed.getPitchAngle(ModuleIDs);

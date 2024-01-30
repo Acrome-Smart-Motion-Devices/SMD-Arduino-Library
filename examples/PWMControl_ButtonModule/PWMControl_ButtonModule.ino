@@ -33,7 +33,7 @@
 int buttonModuleID = 0;
 
 Red red1(ID, Serial, BAUDRATE);
-int dutycylce = 0;
+int dutycycle = 0;
 
 void setup() {
   red1.begin(); 
@@ -47,10 +47,10 @@ void setup() {
 void loop() {
   // It continuously changes the pwm setpoint(duty cycle percent) at regular time intervals.
   if(red1.getButton(buttonModuleID)){
-    dutycylce += 3;
-    if(dutycylce > 90){
-      dutycylce = 0;
+    dutycycle += 3;
+    if(dutycycle > 90){
+      dutycycle = 0;
     }
   }
-  red1.setpoint(PWMControl,dutycylce);
+  red1.setpoint(PWMControl,dutycycle);
 }

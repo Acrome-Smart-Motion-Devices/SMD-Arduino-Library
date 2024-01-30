@@ -68,7 +68,7 @@ void loop() {
 
   red1.setpoint(PositionControl, 3*step);
   delay(1000);
-  red1.setRGB(0, WHITE);
+  red1.setRGB(0, RED);
 
   red1.setpoint(PositionControl, 1*step);
   delay(1000);
@@ -76,7 +76,7 @@ void loop() {
 
   red1.setpoint(PositionControl, 4*step);
   delay(2000);
-  red1.setRGB(0, NO_COLOR);
+  red1.setRGB(0, BLUE);
   
 
 }
