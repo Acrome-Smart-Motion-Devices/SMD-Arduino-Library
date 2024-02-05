@@ -2,7 +2,7 @@
 Introducing the **Acrome Smart Motor Driver (SMD)** Arduino Library, a comprehensive and versatile tool tailored to provide seamless control and communication with the SMD. The SMD Arduino Library simplifies the control of SMD with Arduino, allowing you to focus on the core functions of your projects. Designed with precision and care, this custom driver board is not only a motor control powerhouse but also boasts the capability to seamlessly interface with the SMD Sensor modules making it the ultimate solution for your Arduino projects.
 
 -  **Effortless Motor Control with Arduino:** The hallmark feature of the SMD Arduino Library is its ability to simplify motor control. Designed for Arduino, this library streamlines the process of controlling motors. With Arduino's intuitive programming environment and the SMD library, you can effortlessly command motors, making it an ideal choice for both beginners and experienced developers. Whether you need basic speed control or position control, you can effortlessly implement various motor control strategies using Arduino and this library.
-- **Seamless Sensor Integration:** In addition to motor control, this library seamlessly interfaces with SMD Sensor modules. This integration empowers you to gather data from sensors effortlessly, enhancing your project's functionality without the need for complex coding or external libraries.
+- **Seamless Sensor Integration:** In addition to motor control, this library seamlessly interfaces with SMD Sensor modules. This integration empowers you to gather data from modules effortlessly, enhancing your project's functionality without the need for complex coding or external libraries.
 
 
 # Installation
@@ -44,7 +44,7 @@ To get started with the Smart Motor Driver Arduino Library, follow these steps:
 
 ### Example of typical PWM control with button module
 ```cpp
-    #include <SMDRed.h>
+    #include <Acrome-SMD.h>
     uint8_t ID = 0x00;      // ID of used SMD
     int buttonID = 2;       // ID of used SMD button sensor module
     float PWM = 70.0;       // Duty Cycle of DC motor.
@@ -97,10 +97,10 @@ For a detailed guide on library functions and usage, please review the full docu
     #### `myRed.Ping():`
     - `myRed`: a variable of type `Red`
 
-    **`Return:`**  *`bool`* (`true` or `false`)
+    **`Return:`** *`bool`* (`true` or `false`)
     ### Example
     ```cpp
-      #include <SMDRed.h>
+      #include <Acrome-SMD.h>
       #define BAUDRATE  115200
       uint8_t ID = 0x00;
       Red myRed(ID,Serial);
@@ -129,7 +129,7 @@ For a detailed guide on library functions and usage, please review the full docu
       **`Return:`** *None*
       ### Example
       ```cpp
-      #include <SMDRed.h>
+      #include <Acrome-SMD.h>
       #define CURRENT_BAUDRATE  9600
       #define NEW_BAUDRATE      115200
       uint8_t ID = 0x00;
@@ -201,7 +201,7 @@ For a detailed guide on library functions and usage, please review the full docu
   - Torque Control Integral Gain (I-Gain)
   - Torque Control Derivative Gain (D-Gain)
 
-    The EEPROMWrite() method essentially saves these parameter values to the EEPROM, allowing the device to retain its configuration even after power cycles or resets.
+    The EEPROMWrite() method essentially saves these parameter values to the EEPROM, allows the device to retain its configuration even after power cycles or resets.
       ### Syntax
       #### `myRed.EEPROMWrite()`
       - `myRed`: a variable of type `Red`
@@ -228,7 +228,7 @@ For a detailed guide on library functions and usage, please review the full docu
       **`Return:`** *None*
       ### Example
       ```cpp
-      #include <SMDRed.h>
+      #include <Acrome-SMD.h>
       uint8_t ID = 0x00;
       float cpr = 64.0;
       float rpm = 10000.0;
@@ -260,7 +260,7 @@ For a detailed guide on library functions and usage, please review the full docu
 
       ### Example
       ```cpp
-      #include <SMDRed.h>
+      #include <Acrome-SMD.h>
       uint8_t ID = 0x00;
 
       Red myRed(ID,Serial);
@@ -301,7 +301,7 @@ For a detailed guide on library functions and usage, please review the full docu
 
     ### Example
     ```cpp
-      #include <SMDRed.h>
+      #include <Acrome-SMD.h>
       uint8_t ID = 0x00;
       float PWMsetpoint = 60.0; // represents %60 duty cyle since operation mode is "PWM Control" 
       Red myRed(ID,Serial);
@@ -380,7 +380,7 @@ For a detailed guide on library functions and usage, please review the full docu
     
     ### Example
     ```cpp
-    #include <SMDRed.h>
+    #include <Acrome-SMD.h>
     uint8_t ID = 0x00;
 
     Red myRed(ID, Serial);
@@ -453,11 +453,11 @@ For a detailed guide on library functions and usage, please review the full docu
 
 ## SMD Sensor Module Methods
 
-  - ### `Red - scanSensors()`
-    The scanSensors() method is used to scan and save information about connected sensors. It saves ID's and sensor types of connected sensor modules.
+  - ### `Red - scanModules()`
+    The scanModules() method is used to scan and save information about connected sensors. It saves ID's and sensor types of connected sensor modules.
 
     ### Syntax
-    #### `myRed.scanSensors();`
+    #### `myRed.scanModules();`
     - `myRed`: a variable of type `Red`
 
     **`Return:`** `uint8_t*`:
@@ -466,7 +466,7 @@ For a detailed guide on library functions and usage, please review the full docu
   - ### `Red - availableSensors()`
     This method prints the connected sensors and their IDs to the Arduino's serial monitor, taking from the information recorded in the last scan.
     
-    Ensure that you have executed the `scanSensors()` method before calling `availableSensors()` to have up-to-date sensor information.
+    Ensure that you have executed the `scanModules()` method before calling `availableSensors()` to have up-to-date sensor information.
 
     ### Syntax
     #### `myRed.availableSensors();`
@@ -482,42 +482,37 @@ For a detailed guide on library functions and usage, please review the full docu
 
     this print says 4 sensor modules connected to the SMD. It also shows types and IDs of these modules.
 
+  - ### `Red - setBuzzer()`
+    The setBuzzer() method is used to set a buzzer module to the given frequency.
+
+    ### Syntax
+    #### `myRed.setBuzzer(buzzerID, freq);`
+    - `myRed`: a variable of type `Red`
+    - `buzzerID`: a variable of type `int`
+    - `freq`: a variable of type `uint32_t`. The frequency value desired to set.
+
+
   - ### `Red - setServo()`
     The setServo() method is used to control a servo motor connected to the Servo Sensor Module.
 
     ### Syntax
-    #### `myRed.setServo(servoID,ctrl);`
-    - `myRed`:    a variable of type `Red`
-    - `servoID`:  a variable of type `int` 
-    - `ctrl` :    a variable of type `uint8_t`. It's PWM value for servo.
+    #### `myRed.setServo(servoID, ctrl);`
+    - `myRed`: a variable of type `Red`
+    - `servoID`: a variable of type `int` 
+    - `ctrl` : a variable of type `uint8_t`. It's PWM value for servo.
 
     **`Return:`** `None`
 
   - ### `Red - setRGB()`
-    The setRGB() method is used to control an RGB (Red, Green, Blue) LED module by specifying the intensity or color values for each of the RGB components.
-
-    Colors available in RGB sensor module :
-    - RED,
-    - GREEN,
-    - BLUE,
-    - WHITE,
-    - YELLOW,
-    - CYAN,
-    - MAGENTA,
-    - ORANGE,
-    - PURPLE,
-    - PINK,
-    - AMBER,
-    - TEAL,
-    - INDIGO
-
-    In the method, you can use these colors in the same way as capital letters or you can use numbers from 0 to 12. For example 0 for red    
+    The setRGB() method is used to control an RGB (Red, Green, Blue) LED module by specifying the intensity of each three color.
 
     ### Syntax
-    #### `myRed.setRGB(RGB_ID, color);`
+    #### `myRed.setRGB(RGB_ID, red, green, blue);`
     - `myRed`: a variable of type `Red`
     - `RGB_ID`: a variable of type `int`
-    - `color`: a variable of type `uint8_t` 
+    - `red`: a variable of type `uint8_t`
+    - `green`: a variable of type `uint8_t`
+    - `blue`: a variable of type `uint8_t`
 
     **`Return:`** `None`
 
@@ -535,7 +530,7 @@ For a detailed guide on library functions and usage, please review the full docu
   - ### `Red - getDistance()`
     This method is used to obtain distance data from ultrasonic distance sensor module.
 
-    `return`  the measured distance as an unsigned 16-bit integer (uint16_t) value in centimeters (cm).
+    `return` the measured distance as an unsigned 16-bit integer (uint16_t) value in centimeters (cm).
 
     ### Syntax
     #### `myRed.getDistance(distanceID);`
@@ -634,7 +629,7 @@ For a detailed guide on library functions and usage, please review the full docu
 
   ### Example of typical begin
   ```cpp
-  #include <SMDRed.h>
+  #include <Acrome-SMD.h>
   uint8_t ID = 0x00;
 
   Red myRed(ID,Serial);
@@ -649,7 +644,7 @@ For a detailed guide on library functions and usage, please review the full docu
 
   ### Example of start and tune the motor.
   ```cpp
-  #include <SMDRed.h>
+  #include <Acrome-SMD.h>
   uint8_t ID = 0x00;
   float cpr = 64.0;
   float rpm = 10000.0;
@@ -667,7 +662,7 @@ For a detailed guide on library functions and usage, please review the full docu
   ```
   ### Example of PWM Control
   ```cpp
-  #include <SMDRed.h>
+  #include <Acrome-SMD.h>
   uint8_t ID = 0x00; //ID of using SMD
 
   int dutycyle = 50; //it represents %50 percentage duty cycle
@@ -689,7 +684,7 @@ For a detailed guide on library functions and usage, please review the full docu
 
   ### Example of Position Control
    ```cpp
-  #include <SMDRed.h>
+  #include <Acrome-SMD.h>
   uint8_t ID = 0x00; //ID of using SMD
 
   float CPR = 64;
@@ -718,7 +713,7 @@ For a detailed guide on library functions and usage, please review the full docu
 
   ### Example of Velocity Control
   ```cpp
-  #include <SMDRed.h>
+  #include <Acrome-SMD.h>
   uint8_t ID = 0x00; //ID of using SMD
 
   float CPR = 64;
@@ -749,7 +744,7 @@ For a detailed guide on library functions and usage, please review the full docu
   ### Example of Torque Control
   
   ```cpp
-  #include <SMDRed.h>
+  #include <Acrome-SMD.h>
   uint8_t ID = 0x00; //ID of using SMD
 
   float CPR = 64;
