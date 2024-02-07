@@ -32,7 +32,7 @@ To get started with the Smart Motor Driver Arduino Library, follow these steps:
    3. Create an instance of the `Red` class by initializing it with the `ID` and the `Serial`. This instance represents your motor driver and allows you to control it.
 
    4. In the `setup()` function:
-       - Initialize communication with the SMD using `myRed.begin(baudrate)`. Make sure to use the appropriate baud rate for your setup.
+       - Initialize communication with the SMD using `myRed.begin()`. Make sure to use the appropriate baud rate for your setup.
       - Set the SMD's operation mode based on your application requirements. For example, use `myRed.setOperationMode(PWMControl)` for PWM motor control.
 
    5. In the `loop()` function or your program logic:
@@ -50,11 +50,11 @@ To get started with the Smart Motor Driver Arduino Library, follow these steps:
     float PWM = 70.0;       // Duty Cycle of DC motor.
     int baudrate = 115200;  // Baudrate of communication
 
-    Red myRed(ID,Serial);
+    Red myRed(ID,Serial, baudrate);
 
     void setup()
     {
-    myRed.begin(baudrate);              // Initialize communication with the SMD at the specified baud rate
+    myRed.begin();              // Initialize communication with the SMD at the specified baud rate
     myRed.setOperationMode(PWMControl); // Set the SMD operation mode
     }
 
@@ -75,11 +75,10 @@ For a detailed guide on library functions and usage, please review the full docu
 ## SMD Main and Motor Control Methods
 
   - ### `Red - begin()`
-      This is the initializer for the serial bus. Sets the data rate in bits per second (baud) for serial data transmission. For communicating with Smart Motor Drivers(SMD).
+      This is the initializer for the serial bus. It starts the communication with Smart Motor Drivers(SMD).
       ### Syntax
-      #### `myRed.begin(baudrate);`
+      #### `myRed.begin();`
       - `myRed`: a variable of type `Red`
-      - `baudrate` argument specifies the baudrate of the serial port
 
       **`Return:`** *None*
 
@@ -103,11 +102,11 @@ For a detailed guide on library functions and usage, please review the full docu
       #include <Acrome-SMD.h>
       #define BAUDRATE  115200
       uint8_t ID = 0x00;
-      Red myRed(ID,Serial);
+      Red myRed(ID,Serial, BAUDRATE);
 
       void setup()
       {
-        myRed.begin(BAUDRATE);
+        myRed.begin();
         delay(5);
       }
       void loop()
@@ -133,11 +132,11 @@ For a detailed guide on library functions and usage, please review the full docu
       #define CURRENT_BAUDRATE  9600
       #define NEW_BAUDRATE      115200
       uint8_t ID = 0x00;
-      Red myRed(ID,Serial);
+      Red myRed(ID,Serial, CURRENT_BAUDRATE);
 
       void setup()
       {
-        myRed.begin(CURRENT_BAUDRATE);
+        myRed.begin();
         delay(5);
         myRed.setBaudrate(NEW_BAUDRATE);
         delay(5);
@@ -233,11 +232,11 @@ For a detailed guide on library functions and usage, please review the full docu
       float cpr = 64.0;
       float rpm = 10000.0;
 
-      Red myRed(ID,Serial);
+      Red myRed(ID,Serial, 115200);
 
       void setup()
       {
-        myRed.begin(115200);
+        myRed.begin();
         myRed.setMotorCPR(cpr);
         myRed.setMotorRPM(rpm);
       }
@@ -263,15 +262,44 @@ For a detailed guide on library functions and usage, please review the full docu
       #include <Acrome-SMD.h>
       uint8_t ID = 0x00;
 
-      Red myRed(ID,Serial);
+      Red myRed(ID,Serial, 115200);
 
       void setup()
       {
-        myRed.begin(115200);
+        myRed.begin();
         delay(5);
         myRed.setControlParameters(VelocityControl, 0.4, 1.2, 0.7);
       }
       void loop(){}
+      ```
+  
+  - ### `Red - getControlParameters()`
+      Gets the requested control parameter of the given control mode. This method can return these parameters of any chosen control mode: 
+      - P gain, I gain, D gain, feedforward value, deadband value.
+      ### Syntax
+      #### `myRed.getControlParameters(port, mode, param)`
+      - `myRed`: a variable type of `Red`
+      - `port`: port adress that parameter will be returned (type `HardwareSerial`)
+      - `mode`: selected operation mode (type `tOperationMode`)
+      - `param`: requested parameter to be returned (type `float`)
+
+      **`Return:`** `float`
+      
+      ### Example
+      ```cpp
+      #include <Acrome-SMD.h>
+      uint8_t ID = 0x00;
+
+      Red myRed(ID, Serial, 115200);
+
+      void setup()
+      {
+        myRed.begin();
+
+        Serial.println(myRed.getControlParameters(Serial, PositionControl, Pgain));
+      }
+
+      void loop() {}
       ```
 
   - ### `Red - setOperationMode()`
@@ -304,11 +332,11 @@ For a detailed guide on library functions and usage, please review the full docu
       #include <Acrome-SMD.h>
       uint8_t ID = 0x00;
       float PWMsetpoint = 60.0; // represents %60 duty cyle since operation mode is "PWM Control" 
-      Red myRed(ID,Serial);
+      Red myRed(ID,Serial, 115200);
 
       void setup()
       {
-        myRed.begin(115200);
+        myRed.begin();
         delay(5);
         myRed.setOperationMode(PWMControl);
         myRed.setpoint(PWMsetpoint);
@@ -383,7 +411,7 @@ For a detailed guide on library functions and usage, please review the full docu
     #include <Acrome-SMD.h>
     uint8_t ID = 0x00;
 
-    Red myRed(ID, Serial);
+    Red myRed(ID, Serial, 115200);
 
     void setup()
     {
@@ -480,7 +508,7 @@ For a detailed guide on library functions and usage, please review the full docu
     - Joystick  : 5
     - RGB       : 2
 
-    this print says 4 sensor modules connected to the SMD. It also shows types and IDs of these modules.
+    This print says 4 sensor modules connected to the SMD. It also shows types and IDs of these modules.
 
   - ### `Red - setBuzzer()`
     The setBuzzer() method is used to set a buzzer module to the given frequency.
@@ -632,11 +660,11 @@ For a detailed guide on library functions and usage, please review the full docu
   #include <Acrome-SMD.h>
   uint8_t ID = 0x00;
 
-  Red myRed(ID,Serial);
+  Red myRed(ID,Serial, 115200);
 
   void setup()
   {
-  myRed.begin(115200);
+  myRed.begin();
   }
 
   void loop(){}
@@ -649,11 +677,11 @@ For a detailed guide on library functions and usage, please review the full docu
   float cpr = 64.0;
   float rpm = 10000.0;
   
-  Red myRed(ID,Serial);
+  Red myRed(ID,Serial, 115200);
   
   void setup()
   {
-  myRed.begin(115200);
+  myRed.begin();
   myRed.setMotorCPR(cpr);
   myRed.setMotorRPM(rpm);
   myRed.tune();
@@ -667,10 +695,10 @@ For a detailed guide on library functions and usage, please review the full docu
 
   int dutycyle = 50; //it represents %50 percentage duty cycle
   
-  Red myRed(ID, Serial);
+  Red myRed(ID, Serial, 115200);
   void setup()
   {
-    myRed.begin(115200);   
+    myRed.begin();   
 
    
     myRed.setOperationMode(PWMControl); //selecting mode
@@ -692,11 +720,11 @@ For a detailed guide on library functions and usage, please review the full docu
 
   int position = 1000; //it represents 1000 rpm
   
-  Red myRed(ID, Serial);
+  Red myRed(ID, Serial, 115200);
   
   void setup()
   {
-    myRed.begin(115200);
+    myRed.begin();
 
     myRed.setMotorCPR(CPR);
     myRed.setMotorRPM(RPM);    
@@ -721,11 +749,11 @@ For a detailed guide on library functions and usage, please review the full docu
 
   int velocitySetpoint = 1000; //it represents 1000 rpm
   
-  Red myRed(ID, Serial);
+  Red myRed(ID, Serial, 115200);
   
   void setup()
   {
-    myRed.begin(115200);
+    myRed.begin();
 
     myRed.setMotorCPR(CPR);
     myRed.setMotorRPM(RPM);
@@ -752,11 +780,11 @@ For a detailed guide on library functions and usage, please review the full docu
 
   int torqueSetpoint = 100; //it represents 100 milliamps(mA)
   
-  Red myRed(ID, Serial);
+  Red myRed(ID, Serial, 115200);
   
   void setup()
   {
-    myRed.begin(115200);
+    myRed.begin();
 
     myRed.setMotorCPR(CPR);
     myRed.setMotorRPM(RPM);

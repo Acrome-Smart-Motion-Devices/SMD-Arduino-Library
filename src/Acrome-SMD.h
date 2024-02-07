@@ -145,6 +145,14 @@ typedef enum Index {
 	iCRCValue,
 } tProtocolIndex;
 
+typedef enum {
+  Pgain = 28,
+  Igain = 29,
+  Dgain = 30,
+  Feedforward = 18,
+  Deadband = 21
+}tPIDParameters;
+
 typedef enum{
   BUTTON = 0,
   LIGHT,
@@ -219,6 +227,7 @@ class Red {
     void setDeviceID(uint8_t ID);                                                                   //$
     void setTimeout(uint16_t timeout);                                                              //$
 
+    float getControlParameters(HardwareSerial &port, tOperationMode mode, tPIDParameters param);    //$
     float getPosition();                                                                            //$
     float getVelocity();                                                                            //$
     float getTorque();                                                                              //$

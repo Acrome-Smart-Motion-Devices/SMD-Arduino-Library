@@ -410,6 +410,131 @@ void Red::setControlParameters(tOperationMode mode, float P, float I, float D, f
     _write2serial();
 }
 
+float Red::getControlParameters(HardwareSerial &port, tOperationMode mode, tPIDParameters param) {
+
+    _data[iHeader] = HEADER;
+    _data[iDeviceID] = _devId;
+    _data[iDeviceFamily] = DEVICE_FAMILY;
+    _data[iPackageSize] = CONSTANT_REG_SIZE + 1;
+    _data[iCommand] = READ;
+    _data[iStatus] = 0x00;
+
+    uint8_t paramID = 0;
+
+    switch (mode) {
+
+        case PositionControl:
+            switch (param) {
+
+                case Pgain:
+                    _data[DATA(0)] = Pgain;
+                    paramID = Pgain;
+                    break;
+
+                case Igain:
+                    _data[DATA(0)] = Igain;
+                    paramID = Igain;
+                    break;
+
+                case Dgain:
+                    _data[DATA(0)] = Dgain;
+                    paramID = Dgain;
+                    break;
+
+                case Feedforward:
+                    _data[DATA(0)] = Feedforward;
+                    paramID = Feedforward;
+                    break;
+
+                case Deadband:
+                    _data[DATA(0)] = Deadband;
+                    paramID = Deadband;
+                    break;
+
+            }
+            break;
+
+        case VelocityControl:
+            switch (param) {
+
+                case Pgain:
+                    _data[DATA(0)] = Pgain + 4;
+                    paramID = Pgain + 4;
+                    break;
+
+                case Igain:
+                    _data[DATA(0)] = Igain + 4;
+                    paramID = Igain + 4;   
+                    break;
+
+                case Dgain:
+                    _data[DATA(0)] = Dgain + 4;
+                    paramID = Dgain + 4;
+                    break;
+
+                case Feedforward:
+                    _data[DATA(0)] = Feedforward + 1;
+                    paramID = Feedforward + 1;
+                    break;
+
+                case Deadband:
+                    _data[DATA(0)] = Deadband + 1;
+                    paramID = Deadband + 1;
+                    break;
+
+            }
+            break;
+        
+        case TorqueControl:
+            switch (param) {
+
+                case Pgain:
+                    _data[DATA(0)] = Pgain + 8;
+                    paramID = Pgain + 8;
+                    break;
+
+                case Igain:
+                    _data[DATA(0)] = Igain + 8;
+                    paramID = Igain + 8;   
+                    break;
+
+                case Dgain:
+                    _data[DATA(0)] = Dgain + 8;
+                    paramID = Dgain + 8;
+                    break;
+
+                case Feedforward:
+                    _data[DATA(0)] = Feedforward + 2;
+                    paramID = Feedforward + 2;
+                    break;
+
+                case Deadband:
+                    _data[DATA(0)] = Deadband + 2;
+                    paramID = Deadband + 2;
+                    break;
+
+            }
+            break;
+    }
+
+    _addCRC();
+
+    _write2serial();
+
+    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(float) + 1) * 1) == true)
+    {
+        if ((_checkCRC() == true) && (headerCheck(_devId, READ) == true))
+        {
+            if (_data[DATA(0)] == paramID)
+            {
+                return _getFloat(DATA(1));
+            }
+        }
+    }
+    return 0;
+
+}
+
 void Red::setpoint(tOperationMode mode, float setpoint)
 { // tested $
     _data[iHeader] = HEADER;
