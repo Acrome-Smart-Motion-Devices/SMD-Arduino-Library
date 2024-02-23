@@ -415,10 +415,10 @@ For a detailed guide on library functions and usage, please review the full docu
 
     void setup()
     {
-      myRed.begin(115200);
+      myRed.begin();
       myRed.setMotorCPR(cpr);
       myRed.setMotorRPM(rpm);
-      myRed.autoTune(); // starts autotune task
+      myRed.tune(); // starts the tuning task
     }
     void loop(){}
     ```
@@ -482,23 +482,24 @@ For a detailed guide on library functions and usage, please review the full docu
 ## SMD Sensor Module Methods
 
   - ### `Red - scanModules()`
-    The scanModules() method is used to scan and save information about connected sensors. It saves ID's and sensor types of connected sensor modules.
+    The scanModules() method is used to scan and save information about connected modules. It saves ID's and types of connected sensor modules.
 
     ### Syntax
     #### `myRed.scanModules();`
     - `myRed`: a variable of type `Red`
 
     **`Return:`** `uint8_t*`:
-    This method returns a pointer to an 8-element `uint8_t` array where each bit represents the status of the scanned sensors. Each bit indicates whether a sensor is present or not.
+    This method returns a pointer to an 8-element `uint8_t` array where each bit represents the status of the scanned modules. Each bit indicates whether a module is present or not.
 
-  - ### `Red - availableSensors()`
-    This method prints the connected sensors and their IDs to the Arduino's serial monitor, taking from the information recorded in the last scan.
+  - ### `Red - printAvailableModules()`
+    This method prints the connected modules and their IDs to the Arduino's serial monitor, taking from the information recorded in the last scan.
     
-    Ensure that you have executed the `scanModules()` method before calling `availableSensors()` to have up-to-date sensor information.
+    Ensure that you have executed the `scanModules()` method before calling `printAvailableModules()` to have up-to-date module information.
 
     ### Syntax
-    #### `myRed.availableSensors();`
+    #### `myRed.printAvailableModules(port);`
     - `myRed`: a variable of type `Red`
+    - `port`: port to be scanned for modules (type `HardwareSerial`)
 
     **`Return:`** `None`
 

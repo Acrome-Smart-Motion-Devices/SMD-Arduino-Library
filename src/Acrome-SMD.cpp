@@ -849,7 +849,7 @@ uint8_t *Red::scanModules()
     return 0;
 }
 
-void Red::printAvailableSensors(HardwareSerial &port)
+void Red::printAvailableModules(HardwareSerial &port)
 {
     uint8_t IDs[100] = {0};
     uint8_t SENSOR_TYPE = 0;
