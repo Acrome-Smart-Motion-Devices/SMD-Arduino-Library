@@ -529,7 +529,7 @@ void Red::setOperationMode(tOperationMode mode)
     _write2serial();
 }
 
-void Red::goTo(uint8_t ID, float setPoint, float SCurveTimeSet, float SCurveMaxVelocity, float SCurveAccel, bool blocking, int EncTickCloseCounter)
+void Red::goTo(float setPoint, float SCurveTimeSet, float SCurveMaxVelocity, float SCurveAccel)
 { // Not Tested
     _data[iHeader] = HEADER;
     _data[iDeviceID] = _devId;
@@ -538,27 +538,17 @@ void Red::goTo(uint8_t ID, float setPoint, float SCurveTimeSet, float SCurveMaxV
     _data[iCommand] = WRITE;
     _data[iStatus] = 0x00;
 
-    _data[DATA(0)]=iDeviceID;
-    _data[DATA(1)]=ID;
-
     _data[DATA(2)]=iSCurvesetpoint;
     _addFloat(DATA(3),setPoint);
 
-    _data[DATA(6)]=iSCurveAccel;
-    _addFloat(DATA(7),SCurveAccel);
+    _data[DATA(7)]=iSCurveAccel;
+    _addFloat(DATA(8),SCurveAccel);
 
-    _data[DATA(10)]=iSCurveMaxVelocity;
-    _addFloat(DATA(11),SCurveMaxVelocity);
+    _data[DATA(12)]=iSCurveMaxVelocity;
+    _addFloat(DATA(13),SCurveMaxVelocity);
 
-    _data[DATA(15)]=iSCurveTime;
-    _addFloat(DATA(16),SCurveTimeSet);
-
-    Red.setOperationMode(1);        //OperationMode 1 = PositionControl
-
-    while(blocking)
-    {
-        if (abs(iSCurvesetpoint - getPosition()) <= EncTickCloseCounter) break;  //getPosition Fonksiyonuna bakılacak
-    }
+    _data[DATA(17)]=iSCurveTime;
+    _addFloat(DATA(18),SCurveTimeSet);
 
     _addCRC();
 
@@ -1172,7 +1162,7 @@ uint16_t Red::getDistance(int distanceID)
     return 0;
 }
 
-struct Red::getQTR(int qtrID)
+QTRValues Red::getQTR(int qtrID)
 {
     if(!_checkModuleID(qtrID)){
         return;
@@ -1208,7 +1198,8 @@ struct Red::getQTR(int qtrID)
             }
         }
     }
-    return 0;
+
+    return qtrlist;
 }
 
 

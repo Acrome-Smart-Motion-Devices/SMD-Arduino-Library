@@ -186,6 +186,12 @@ typedef enum{
   BLUE,
 } tColors;
 
+typedef struct{
+  uint8_t LeftValue;
+  uint8_t MiddleValue;
+  uint8_t RightValue;
+}QTRValues;
+
 
 /*
 typedef enum{
@@ -236,6 +242,9 @@ class Red {
     void setBaudrate(uint32_t baud);
     void setDeviceID(uint8_t ID);                                                                   //$
     void setTimeout(uint16_t timeout);                                                              //$
+    
+    void goTo(float setPoint, float SCurveTimeSet, float SCurveMaxVelocity, float SCurveAccel);
+    void Red::setVelocityAccel(uint16_t accel);
 
     float getPosition();                                                                            //$
     float getVelocity();                                                                            //$
@@ -255,12 +264,12 @@ class Red {
     uint8_t   getButton(int buttonID);      //$
     uint16_t  getLight(int lightID);        //$
 
-    int32_t     getJoystickX(int joystickID);    //$
-    int32_t     getJoystickY(int joystickID);    //$
+    int32_t   getJoystickX(int joystickID);    //$
+    int32_t   getJoystickY(int joystickID);    //$
     uint8_t   getJoystickButton(int joystickID);  //$
                                            
     uint16_t  getDistance(int distanceID);  //$
-    uint8_t   getQTR(int qtrID);            //$?
+    QTRValues getQTR(int qtrID);            //$?
     uint8_t   getPotentiometer(int potentiometerID); //$
 
     float     getRollAngle(int iIMU_ID);  //$
