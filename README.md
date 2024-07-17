@@ -29,10 +29,10 @@ To get started with the Smart Motor Driver Arduino Library, follow these steps:
       - `Serial`: The serial communication interface you are using.
       - `baudrate`: The baud rate for serial communication. (Baudrate should be 115200 if not set before)
    
-   3. Create an instance of the `Red` class by initializing it with the `ID` and the `Serial`. This instance represents your motor driver and allows you to control it.
+   3. Create an instance of the `Red` class by initializing it with the `ID`, the `Serial` and `baudrate` . This instance represents your motor driver and allows you to control it.
 
    4. In the `setup()` function:
-       - Initialize communication with the SMD using `myRed.begin()`. Make sure to use the appropriate baud rate for your setup.
+      - Initialize communication with the SMD using `myRed.begin()`.
       - Set the SMD's operation mode based on your application requirements. For example, use `myRed.setOperationMode(PWMControl)` for PWM motor control.
 
    5. In the `loop()` function or your program logic:
@@ -44,29 +44,31 @@ To get started with the Smart Motor Driver Arduino Library, follow these steps:
 
 ### Example of typical PWM control with button module
 ```cpp
-    #include <Acrome-SMD.h>
-    uint8_t ID = 0x00;      // ID of used SMD
-    int buttonID = 2;       // ID of used SMD button sensor module
-    float PWM = 70.0;       // Duty Cycle of DC motor.
-    int baudrate = 115200;  // Baudrate of communication
+    #include <SMDRed.h>
+    uint8_t ID = 0x00;                  // ID of used SMD
+    uint8_t buttonID = 1;               // ID of used SMD button sensor module
+    float PWM = 70.0;                   // Duty Cycle of DC motor.
+    uint32_t baudrate = 115200;         // Baudrate of communication
+    uint16_t cpr = 6533.0               // CPR value of the motor
+    uint16_t rpm = 100.0                // RPM value of the motor
 
-    Red myRed(ID,Serial, baudrate);
+    Red myRed(ID, Serial, baudrate);
 
-    void setup()
-    {
-    myRed.begin();              // Initialize communication with the SMD at the specified baud rate
-    myRed.setOperationMode(PWMControl); // Set the SMD operation mode
+    void setup(){
+        myRed.begin();                      // Initialize communication with the SMD at the specified baud rate
+        myRed.setOperationMode(PWMControl); // Set the SMD operation mode
+        myRed.setMotorCPR(cpr);             // Set the motor CPR
+        myRed.setMotorRPM(rpm);             // Set the motor RPM
+        myRed.setpoint(PWMControl, PWM);    // Set the PWM value for motor control
     }
 
     void loop(){
-    myRed.setpoint(PWMControl, PWM);    // Set the PWM value for motor control
-    if(myRed.getButton(buttonID)){
-      myRed.torqueEnable(1);            // Enable torque (motor control) when the button is pressed
-    }
-
-    else{
-      myRed.torqueEnable(0);            // Disable torque (stop the motor) when the button is not pressed
-    }
+        if(myRed.getButton(buttonID)){
+          myRed.torqueEnable(1);            // Enable torque (motor control) when the button is pressed
+        }
+        else{
+          myRed.torqueEnable(0);            // Disable torque (stop the motor) when the button is not pressed
+        }
     }
 ```
 
@@ -75,7 +77,7 @@ For a detailed guide on library functions and usage, please review the full docu
 ## SMD Main and Motor Control Methods
 
   - ### `Red - begin()`
-      This is the initializer for the serial bus. It starts the communication with Smart Motor Drivers(SMD).
+      This is the initializer for the serial bus. Sets the data rate in bits per second (baud) for serial data transmission. For communicating with Smart Motor Drivers(SMD).
       ### Syntax
       #### `myRed.begin();`
       - `myRed`: a variable of type `Red`
@@ -96,13 +98,13 @@ For a detailed guide on library functions and usage, please review the full docu
     #### `myRed.Ping():`
     - `myRed`: a variable of type `Red`
 
-    **`Return:`** *`bool`* (`true` or `false`)
+    **`Return:`**  *`bool`* (`true` or `false`)
     ### Example
     ```cpp
-      #include <Acrome-SMD.h>
+      #include <SMDRed.h>
       #define BAUDRATE  115200
       uint8_t ID = 0x00;
-      Red myRed(ID,Serial, BAUDRATE);
+      Red myRed(ID, Serial, BAUDRATE);
 
       void setup()
       {
@@ -128,11 +130,11 @@ For a detailed guide on library functions and usage, please review the full docu
       **`Return:`** *None*
       ### Example
       ```cpp
-      #include <Acrome-SMD.h>
+      #include <SMDRed.h>
       #define CURRENT_BAUDRATE  9600
       #define NEW_BAUDRATE      115200
       uint8_t ID = 0x00;
-      Red myRed(ID,Serial, CURRENT_BAUDRATE);
+      Red myRed(ID ,Serial, CURRENT_BAUDRATE);
 
       void setup()
       {
@@ -146,18 +148,9 @@ For a detailed guide on library functions and usage, please review the full docu
       }
       void loop(){}
       ```
-
-  - ### `Red - FactoryReset()`
-    Resets all variables and memory on the SMD board, including the EEPROM. Restores the SMD to factory settings.
-      ### Syntax
-      #### `myRed.FactoryReset():`
-      - `myRed`: a variable of type `Red`
-
-      **`Return:`** *None*
-
-
+      
   - ### `Red - Reboot()`
-    The method is designed to reboot the SMD board with which the Arduino interacts. If there is a problem in communication between Arduino and SMD board, SMD cannot restart itself.
+    The method is designed to reboot the SMD board with which the arduino interacts. If there is a problem in communication between Arduino and SMD board, SMD cannot restart itself.
 
     The primary purpose of the `Reboot()` method is to initiate a system reboot on the target SMD board. This action is often required to apply configuration changes or resolve issues without manual intervention.
 
@@ -166,6 +159,16 @@ For a detailed guide on library functions and usage, please review the full docu
     - `myRed`: a variable of type `Red`
 
     **`Return:`** *None*
+    
+
+  - ### `Red - FactoryReset()`
+    Resets all variables and memory on the SMD board, including the EEPROM. Sestores the SMD to factory settings.
+      ### Syntax
+      #### `myRed.FactoryReset():`
+      - `myRed`: a variable of type `Red`
+
+      **`Return:`** *None*
+
 
   - ### `Red - EEPROMWrite()`
     The 'EEPROMWrite()' method is utilized to store specific device configuration parameters in the SMD's EEPROM. This ensures that certain recorded data will not be lost when the SMD is powered off and then powered on again. Some of this data is crucial for record-keeping purposes, including the SMD device ID, operating mode, characteristics of the motor connected to the SMD, limits, and PID constants.
@@ -200,7 +203,7 @@ For a detailed guide on library functions and usage, please review the full docu
   - Torque Control Integral Gain (I-Gain)
   - Torque Control Derivative Gain (D-Gain)
 
-    The EEPROMWrite() method essentially saves these parameter values to the EEPROM, allows the device to retain its configuration even after power cycles or resets.
+    The EEPROMWrite() method essentially saves these parameter values to the EEPROM, allowing the device to retain its configuration even after power cycles or resets.
       ### Syntax
       #### `myRed.EEPROMWrite()`
       - `myRed`: a variable of type `Red`
@@ -208,31 +211,31 @@ For a detailed guide on library functions and usage, please review the full docu
       **`Return:`** *None*
 
   - ### `Red - setMotorCPR()`
-    Sets the CPR of motor. It is very important to read encoder if you use. Make sure you entered the parameter correctly. Otherwise, the calculations will not work properly.
+    sets the CPR of motor. It is very important to read encoder if you use. Make sure you entered the parameter correctly. Otherwise the calcuations will not work properly.
       ### Syntax
       #### `myRed.setMotorCPR(cpr)`
       - `myRed` a variable of type `Red`
-      - `cpr` a variable of type `float`
+      - `cpr` a varaiable of type `float`
 
       **`Return:`** *None*
       
 
   - ### `Red - setMotorRPM()`
-    Sets the RPM of motor. It is very important to read encoder and drive motor. Make sure you entered the parameter correctly. Otherwise, the calculations will not work properly.
+    sets the RPM of motor. It is very important to read encoder and drive motor. Make sure you entered the parameter correctly. Otherwise the calcuations will not work properly.
       ### Syntax
       #### `myRed.setMotorRPM(rpm)`
       - `myRed` a variable of type `Red`
-      - `rpm` a variable of type `float`
+      - `rpm` a varaiable of type `float`
 
       **`Return:`** *None*
       ### Example
       ```cpp
-      #include <Acrome-SMD.h>
+      #include <SMDRed.h>
       uint8_t ID = 0x00;
       float cpr = 64.0;
       float rpm = 10000.0;
 
-      Red myRed(ID,Serial, 115200);
+      Red myRed(ID, Serial, 115200);
 
       void setup()
       {
@@ -259,35 +262,7 @@ For a detailed guide on library functions and usage, please review the full docu
 
       ### Example
       ```cpp
-      #include <Acrome-SMD.h>
-      uint8_t ID = 0x00;
-
-      Red myRed(ID,Serial, 115200);
-
-      void setup()
-      {
-        myRed.begin();
-        delay(5);
-        myRed.setControlParameters(VelocityControl, 0.4, 1.2, 0.7);
-      }
-      void loop(){}
-      ```
-  
-  - ### `Red - getControlParameters()`
-      Gets the requested control parameter of the given control mode. This method can return these parameters of any chosen control mode: 
-      - P gain, I gain, D gain, feedforward value, deadband value.
-      ### Syntax
-      #### `myRed.getControlParameters(port, mode, param)`
-      - `myRed`: a variable type of `Red`
-      - `port`: port adress that parameter will be returned (type `HardwareSerial`)
-      - `mode`: selected operation mode (type `tOperationMode`)
-      - `param`: requested parameter to be returned (type `float`)
-
-      **`Return:`** `float`
-      
-      ### Example
-      ```cpp
-      #include <Acrome-SMD.h>
+      #include <SMDRed.h>
       uint8_t ID = 0x00;
 
       Red myRed(ID, Serial, 115200);
@@ -295,11 +270,10 @@ For a detailed guide on library functions and usage, please review the full docu
       void setup()
       {
         myRed.begin();
-
-        Serial.println(myRed.getControlParameters(Serial, PositionControl, Pgain));
+        delay(5);
+        myRed.setControlParameters(VelocityControl, 0.4, 1.2, 0.7 ,0.0, 0.0);
       }
-
-      void loop() {}
+      void loop(){}
       ```
 
   - ### `Red - setOperationMode()`
@@ -322,24 +296,24 @@ For a detailed guide on library functions and usage, please review the full docu
     
     ### Syntax
     #### `myRed.setpoint(mode, setpoint);`
-    - `mode` parameter is a variable of type `OperationMode`
-    - `setpoint` parameter is a variable of type `float`
+    - `mode` parameter is a varaible of type `OperationMode`
+    - `setpoint` parameter is a varaible of type `float`
 
     **`Return:`** *None*
 
     ### Example
     ```cpp
-      #include <Acrome-SMD.h>
+      #include <SMDRed.h>
       uint8_t ID = 0x00;
       float PWMsetpoint = 60.0; // represents %60 duty cyle since operation mode is "PWM Control" 
-      Red myRed(ID,Serial, 115200);
+      Red myRed(ID, Serial, 115200);
 
       void setup()
       {
         myRed.begin();
         delay(5);
         myRed.setOperationMode(PWMControl);
-        myRed.setpoint(PWMsetpoint);
+        myRed.setpoint(setpoint);
         myRed.torqueEnable(1);
       }
       void loop(){}
@@ -367,7 +341,7 @@ For a detailed guide on library functions and usage, please review the full docu
     **`Return:`** *None*
 
   - ### `Red - setTorqueLimit()`
-    Sets the torque limit of the SMD. You should set the limits if you drive a motor as torque control.
+    Sets the position limits of the SMD. You should set the limits if you drive a motor as positional control.
     
     ### Syntax
     #### `myRed.setTorqueLimit(limit);`
@@ -377,7 +351,7 @@ For a detailed guide on library functions and usage, please review the full docu
     **`Return:`** *None*
 
   - ### `Red - torqueEnable()`
-    The method enables or disables the torque of a motor based on the provided parameter. This method is used to control whether the motor is allowed to rotate.
+    The Method enables or disables the torque of a motor based on the provided parameter. This method is used to control whether the motor is allowed to rotate.
 
     - When the parameter is set to 1, the motor's torque is enabled, allowing it to rotate and perform mechanical work.
     - When the parameter is set to 0, the motor's torque is disabled, causing the motor to remain stationary or free-wheel.
@@ -394,7 +368,7 @@ For a detailed guide on library functions and usage, please review the full docu
   - ### `Red - tune()`
     The method activates the autotune task on a specific card and initiates the autotune process. SMD board will set the PID constants after this auto-tuning task.
     
-    The duration of the autotune task may vary depending on the motor installed in the SMD card. After this method is used, the SMD does not perform the operations related to driving until the tune task is completed. Communication with the SMD can be continued, but the card does not drive the motor in any way other than the tune function.
+    The duration of the autotune task may vary depending on the motor installed in the smd card. After this method is used, the SMD does not perform the operations related to driving until the tune task is completed. Communication with the SMD can be continued, but the card does not drive the motor in any way other than the tune function.
     
     Note: when tune method is called, torque enable becomes "1" so motor can rotate.
 
@@ -408,7 +382,7 @@ For a detailed guide on library functions and usage, please review the full docu
     
     ### Example
     ```cpp
-    #include <Acrome-SMD.h>
+    #include <SMDRed.h>
     uint8_t ID = 0x00;
 
     Red myRed(ID, Serial, 115200);
@@ -418,7 +392,7 @@ For a detailed guide on library functions and usage, please review the full docu
       myRed.begin();
       myRed.setMotorCPR(cpr);
       myRed.setMotorRPM(rpm);
-      myRed.tune(); // starts the tuning task
+      myRed.autoTune();         // starts autotune task
     }
     void loop(){}
     ```
@@ -436,7 +410,7 @@ For a detailed guide on library functions and usage, please review the full docu
     **`Return:`** *None*
 
   - ### `Red - setTimeout()`
-    The method is a function designed to set the communication timeout value for the connected device or board. This function plays role in managing the time frame within which communication with the hardware should occur.
+    The method is a function designed to set the communication timeout value for the connected device or board. This function play role in managing the time frame within which communication with the hardware should occur.
 
     ### Syntax
     #### `myRed.setTimeout(timeout);`
@@ -467,7 +441,7 @@ For a detailed guide on library functions and usage, please review the full docu
     **`Return:`** `float`
 
   - ### `Red - getAnalogPort()`
-    This method reads and returns the connected module's analog signal from the analog port.
+    This method serves as a foundational function for controlling servo motors. It enables you to control the position and behavior of a servo motor connected to your system by providing PWM signals to the servo motor.
 
     ### Syntax
     #### `myRed.getAnalogPort();`
@@ -481,25 +455,24 @@ For a detailed guide on library functions and usage, please review the full docu
 
 ## SMD Sensor Module Methods
 
-  - ### `Red - scanModules()`
-    The scanModules() method is used to scan and save information about connected modules. It saves ID's and types of connected sensor modules.
+  - ### `Red - scanSensors()`
+    The scanSensors() method is used to scan and save information about connected sensors. It's saves ID's and sensor types of connected sensor modules.
 
     ### Syntax
-    #### `myRed.scanModules();`
+    #### `myRed.scanSensors();`
     - `myRed`: a variable of type `Red`
 
     **`Return:`** `uint8_t*`:
-    This method returns a pointer to an 8-element `uint8_t` array where each bit represents the status of the scanned modules. Each bit indicates whether a module is present or not.
+    This method returns a pointer to an 8-element `uint8_t` array where each bit represents the status of the scanned sensors. Each bit indicates whether a sensor is present or not.
 
-  - ### `Red - printAvailableModules()`
-    This method prints the connected modules and their IDs to the Arduino's serial monitor, taking from the information recorded in the last scan.
+  - ### `availableSensors()`
+    This method prints the connected sensors and their IDs to the arduino's serial monitor, taking from the information recorded in the last scan.
     
-    Ensure that you have executed the `scanModules()` method before calling `printAvailableModules()` to have up-to-date module information.
+    Ensure that you have executed the `scanSensors()` method before calling `availableSensors()` to have up-to-date sensor information.
 
     ### Syntax
-    #### `myRed.printAvailableModules(port);`
+    #### `myRed.availableSensors();`
     - `myRed`: a variable of type `Red`
-    - `port`: port to be scanned for modules (type `HardwareSerial`)
 
     **`Return:`** `None`
 
@@ -509,145 +482,150 @@ For a detailed guide on library functions and usage, please review the full docu
     - Joystick  : 5
     - RGB       : 2
 
-    This print says 4 sensor modules connected to the SMD. It also shows types and IDs of these modules.
-
-  - ### `Red - setBuzzer()`
-    The setBuzzer() method is used to set a buzzer module to the given frequency.
-
-    ### Syntax
-    #### `myRed.setBuzzer(buzzerID, freq);`
-    - `myRed`: a variable of type `Red`
-    - `buzzerID`: a variable of type `int`
-    - `freq`: a variable of type `uint32_t`. The frequency value desired to set.
-
+    this print says 5 sensor modules connected to the SMD. It also shows types and IDs of these modules.
 
   - ### `Red - setServo()`
     The setServo() method is used to control a servo motor connected to the Servo Sensor Module.
 
     ### Syntax
     #### `myRed.setServo(servoID, ctrl);`
-    - `myRed`: a variable of type `Red`
-    - `servoID`: a variable of type `int` 
-    - `ctrl` : a variable of type `uint8_t`. It's PWM value for servo.
+    - `myRed`:    a variable of type `Red`
+    - `servoID`:  a varaible of type `int` 
+    - `ctrl` :    a varaible of type `uint8_t`. It's PWM value for servo.
 
     **`Return:`** `None`
 
   - ### `Red - setRGB()`
-    The setRGB() method is used to control an RGB (Red, Green, Blue) LED module by specifying the intensity of each three color.
+    The setRGB() method is used to control an RGB (Red, Green, Blue) LED module by specifying the intensity or color values for each of the RGB components.
+
+    Colors available in RGB sensor module :
+    - RED,
+    - GREEN,
+    - BLUE,
+    - WHITE,
+    - YELLOW,
+    - CYAN,
+    - MAGENTA,
+    - ORANGE,
+    - PURPLE,
+    - PINK,
+    - AMBER,
+    - TEAL,
+    - INDIGO
+
+    In the method, you can use these colors in the same way as capital letters or you can use numbers from 0 to 12. For example 0 for red    
 
     ### Syntax
-    #### `myRed.setRGB(RGB_ID, red, green, blue);`
+    #### `myRed.setRGB(RGB_ID, color);`
     - `myRed`: a variable of type `Red`
-    - `RGB_ID`: a variable of type `int`
-    - `red`: a variable of type `uint8_t`
-    - `green`: a variable of type `uint8_t`
-    - `blue`: a variable of type `uint8_t`
+    - `RGB_ID`: a varaible of type `int`
+    - `color`: a variable of type `uint8_t` 
 
     **`Return:`** `None`
 
   - ### `Red - getButton()`
-    This method gets the button value from button module.
+    This method gets the Button value from button module.
     It returns 0 (zero) when not pressed and 1 (one) when pressed.
 
     ### Syntax
     #### `myRed.getButton(buttonID);`
     - `myRed`: a variable of type `Red`
-    - `buttonID`: a variable of type `int`
+    - `buttonID`: a varaible of type `int`
 
     **`Return:`** `uint8_t`
   
   - ### `Red - getDistance()`
     This method is used to obtain distance data from ultrasonic distance sensor module.
 
-    `return` the measured distance as an unsigned 16-bit integer (uint16_t) value in centimeters (cm).
+    `return`  the measured distance as an unsigned 16-bit integer (uint16_t) value in centimeters (cm).
 
     ### Syntax
     #### `myRed.getDistance(distanceID);`
     - `myRed`: a variable of type `Red`
-    - `distanceID`: a variable of type `int`
+    - `distanceID`: a varaible of type `int`
 
     **`Return:`** `uint16_t`
 
   - ### `Red - getLight()`
-    This method gets the ambient light module data with given ID.
+    This method gets the ambient light module data with given IDs.
 
     ### Syntax
     #### `myRed.getLight(lightID);`
     - `myRed`: a variable of type `Red`
-    - `lightID`: a variable of type `int`
+    - `lightID`: a varaible of type `int`
 
     **`Return:`** `uint16_t` unit of Lux
 
 
   - ### `Red - getQTR()`
-    This method gets the QTR module data with given IDs.
+    This method gets the qtr module data with given IDs. Data is in form of 3 bits, each representing one of the sensors.
 
     ### Syntax
     #### `myRed.getQTR(QTRID);`
     - `myRed`: a variable of type `Red`
-    - `QTRID`: a variable of type `int`
+    - `QTRID`: a varaible of type `int`
 
-    **`Return:`** `float`
+    **`Return:`** `uint8_t`
 
   - ### `Red - getJoystickX()`
-    It gets the X analog value from joystick modules with given module IDs.
+    It's gets the X analog value from joystick modules with given module IDs.
 
     ### Syntax
     #### `myRed.getJoystickX(joystickID);`
     - `myRed`: a variable of type `Red`
-    - `joystickID`: a variable of type `int`
+    - `joystickID`: a varaible of type `int`
 
     **`Return:`** `float`
 
     `return` 
   - ### `Red - getJoystickY()`
-    It gets the Y analog value from joystick modules with given module IDs.
+    It's gets the Y analog value from joystick modules with given module IDs.
 
     ### Syntax
     #### `myRed.getJoystickY(joystickID);`
     - `myRed`: a variable of type `Red`
-    - `joystickID`: a variable of type `int`
+    - `joystickID`: a varaible of type `int`
 
     **`Return:`** `float`
 
   - ### `Red - getJoystickButton()`
-    It gets the button value from joystick modules with given module IDs.
+    It's gets the button value from joystick modules with given module IDs.
 
     ### Syntax
     #### `myRed.getJoystickButton(joystickID);`
     - `myRed`: a variable of type `Red`
-    - `joystickID`: a variable of type `int`
+    - `joystickID`: a varaible of type `int`
 
     **`Return:`** `uint8_t`
 
   - ### `Red - getPotentiometer()`
-    This method gets the analog value from potentiometer modules with given IDs.
+    This method gets the analog value from potantiometer modules with given IDs
 
     ### Syntax
     #### `myRed.getPotentiometer(potentiometerID);`
     - `myRed`: a variable of type `Red`
-    - `potentiometerID`: a variable of type `int`
+    - `potentiometerID`: a varaible of type `int`
 
     **`Return:`** `uint8_t`
 
 
   - ### `Red - getRollAngle()`
-    This method gets the roll angle data from IMU modules with given IDs.
+    This method gets the roll angle data from IMU modules with given IDs
 
     ### Syntax
     #### `myRed.getRollAngle(iIMU_ID);`
     - `myRed`: a variable of type `Red`
-    - `iIMU_ID`: a variable of type `int`
+    - `iIMU_ID`: a varaible of type `int`
 
     **`Return:`** `float`
 
   - ### `Red - getPitchAngle()`
-    This method gets the roll angle data from IMU modules with given IDs.
+    This method gets the roll angle data from IMU modules with given IDs
 
     ### Syntax
     #### `myRed.getPitchAngle(iIMU_ID);`
     - `myRed`: a variable of type `Red`
-    - `iIMU_ID`: a variable of type `int`
+    - `iIMU_ID`: a varaible of type `int`
 
     **`Return:`** `float`
 
@@ -658,13 +636,12 @@ For a detailed guide on library functions and usage, please review the full docu
 
   ### Example of typical begin
   ```cpp
-  #include <Acrome-SMD.h>
+  #include <SMDRed.h>
   uint8_t ID = 0x00;
 
-  Red myRed(ID,Serial, 115200);
+  Red myRed(ID, Serial, 115200);
 
-  void setup()
-  {
+  void setup(){
   myRed.begin();
   }
 
@@ -673,25 +650,24 @@ For a detailed guide on library functions and usage, please review the full docu
 
   ### Example of start and tune the motor.
   ```cpp
-  #include <Acrome-SMD.h>
+  #include <SMDRed.h>
   uint8_t ID = 0x00;
   float cpr = 64.0;
   float rpm = 10000.0;
   
-  Red myRed(ID,Serial, 115200);
+  Red myRed(ID, Serial, 115200);
   
-  void setup()
-  {
-  myRed.begin();
-  myRed.setMotorCPR(cpr);
-  myRed.setMotorRPM(rpm);
-  myRed.tune();
+  void setup(){
+      myRed.begin();
+      myRed.setMotorCPR(cpr);
+      myRed.setMotorRPM(rpm);
+      myRed.tune();
   }
   void loop(){}
   ```
   ### Example of PWM Control
   ```cpp
-  #include <Acrome-SMD.h>
+  #include <SMDRed.h>
   uint8_t ID = 0x00; //ID of using SMD
 
   int dutycyle = 50; //it represents %50 percentage duty cycle
@@ -699,7 +675,7 @@ For a detailed guide on library functions and usage, please review the full docu
   Red myRed(ID, Serial, 115200);
   void setup()
   {
-    myRed.begin();   
+    myRed.begin(115200);   
 
    
     myRed.setOperationMode(PWMControl); //selecting mode
@@ -713,7 +689,7 @@ For a detailed guide on library functions and usage, please review the full docu
 
   ### Example of Position Control
    ```cpp
-  #include <Acrome-SMD.h>
+  #include <SMDRed.h>
   uint8_t ID = 0x00; //ID of using SMD
 
   float CPR = 64;
@@ -742,7 +718,7 @@ For a detailed guide on library functions and usage, please review the full docu
 
   ### Example of Velocity Control
   ```cpp
-  #include <Acrome-SMD.h>
+  #include <SMDRed.h>
   uint8_t ID = 0x00; //ID of using SMD
 
   float CPR = 64;
@@ -773,13 +749,13 @@ For a detailed guide on library functions and usage, please review the full docu
   ### Example of Torque Control
   
   ```cpp
-  #include <Acrome-SMD.h>
+  #include <SMDRed.h>
   uint8_t ID = 0x00; //ID of using SMD
 
   float CPR = 64;
   float RPM = 10000; 
 
-  int torqueSetpoint = 100; //it represents 100 milliamps(mA)
+  int torqueSetpoint = 100; //it represents 100 mili amps(mA)
   
   Red myRed(ID, Serial, 115200);
   
