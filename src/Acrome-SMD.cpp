@@ -529,6 +529,50 @@ void Red::setOperationMode(tOperationMode mode)
     _write2serial();
 }
 
+void Red::goTo(float setPoint, float SCurveTimeSet, float SCurveMaxVelocity, float SCurveAccel)
+{ // Not Tested
+    _data[iHeader] = HEADER;
+    _data[iDeviceID] = _devId;
+    _data[iDeviceFamily] = DEVICE_FAMILY;
+    _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(float)* 4 + 4);
+    _data[iCommand] = WRITE;
+    _data[iStatus] = 0x00;
+
+    _data[DATA(2)]=iSCurvesetpoint;
+    _addFloat(DATA(3),setPoint);
+
+    _data[DATA(7)]=iSCurveAccel;
+    _addFloat(DATA(8),SCurveAccel);
+
+    _data[DATA(12)]=iSCurveMaxVelocity;
+    _addFloat(DATA(13),SCurveMaxVelocity);
+
+    _data[DATA(17)]=iSCurveTime;
+    _addFloat(DATA(18),SCurveTimeSet);
+
+    _addCRC();
+
+    _write2serial();
+}
+
+void Red::setVelocityAccel(uint16_t accel)
+{ // Not Tested
+    _data[iHeader] = HEADER;
+    _data[iDeviceID] = _devId;
+    _data[iDeviceFamily] = DEVICE_FAMILY;
+    _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(uint16_t) + 1) * 1;
+    _data[iCommand] = WRITE;
+    _data[iStatus] = 0x00;
+
+    _data[DATA(0)] = iSetVelocityAcceleration;
+    _addU16(DATA(1), accel);
+
+    _addCRC();
+
+    _write2serial();
+}
+
+
 void Red::setDeviceID(uint8_t ID)
 { // tested $
     _data[iHeader] = HEADER;
@@ -1118,12 +1162,14 @@ uint16_t Red::getDistance(int distanceID)
     return 0;
 }
 
-uint8_t Red::getQTR(int qtrID)
+QTRValues Red::getQTR(int qtrID)
 {
     if(!_checkModuleID(qtrID)){
-        return 0;
+        return;
     }
     uint8_t ProtocolID = iQTR_1 + qtrID -1;
+
+    QTRValues qtrlist;
 
     _data[iHeader] = HEADER;
     _data[iDeviceID] = _devId;
@@ -1138,17 +1184,22 @@ uint8_t Red::getQTR(int qtrID)
 
     _write2serial();
 
-    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(uint8_t) + 1) * 1) == true)
+    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(uint8_t) + 1) * 3) == true)
     {
         if ((_checkCRC() == true) && (headerCheck(_devId, READ) == true))
         {
             if (_data[DATA(0)] == ProtocolID)
             {
-                return _data[DATA(1)];
+                qtrlist.LeftValue =    _data[DATA(1)];
+                qtrlist.MiddleValue =  _data[DATA(2)];
+                qtrlist.RightValue =   _data[DATA(3)];
+                
+                return qtrlist;
             }
         }
     }
-    return 0;
+
+    return qtrlist;
 }
 
 
