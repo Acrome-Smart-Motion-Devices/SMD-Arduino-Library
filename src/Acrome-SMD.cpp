@@ -738,13 +738,21 @@ uint8_t *Red::scanModules()
     _addCRC();
     _write2serial();
 
-    delay(2000);
-    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(uint64_t)) * 1) == true) //it is to reset buffer
-    {
-    }
+    delay(5500);
 
+    _data[iHeader] = HEADER;
+    _data[iDeviceID] = _devId;
+    _data[iDeviceFamily] = DEVICE_FAMILY;
+    _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(uint8_t)) * 1;
+    _data[iCommand] = READ;
+    _data[iStatus] = 0x00;
+
+    _data[DATA(0)] = iConnectedBitfield;
+
+    _addCRC();
     _write2serial();
-    // package size , SCAN_MODULES , 64bit, read two times.
+
+    // package size , SCAN_MODULES , 64bit
     if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(uint64_t)) * 1) == true)
     {
         if ((_checkCRC() == true) && (headerCheck(_devId, SCAN_MODULES) == true))
@@ -849,6 +857,111 @@ void Red::printAvailableSensors(HardwareSerial &port)
     }
     port.println();
 }
+
+void Red::setConnectedModules(uint8_t sensors[], uint8_t number_of_connected_sensors){
+
+    uint8_t ManualBuzzerByte = 0;
+    uint8_t ManualServoByte= 0;
+    uint8_t ManualRGBByte= 0;
+    uint8_t ManualButtonByte = 0;
+    uint8_t ManualLightByte = 0;
+    uint8_t ManualJoystickByte = 0;
+    uint8_t ManualQTRByte = 0;
+    uint8_t ManualDistanceByte = 0;
+    uint8_t ManualPotByte = 0;
+    uint8_t ManualIMUByte = 0;
+
+    for (int i = 0; i < number_of_connected_sensors; i++)
+    {
+        switch (sensors[i]){
+            case iBuzzer_1 ... iBuzzer_5 :
+                ManualBuzzerByte |= 1<<(sensors[i] - iBuzzer_1 + 1);
+                break;
+
+            case iServo_1 ... iServo_5 :
+                ManualServoByte |= 1<<(sensors[i] - iServo_1 + 1);
+                break;
+
+            case iRGB_1 ... iRGB_5 :
+                ManualRGBByte |= 1<<(sensors[i] - iRGB_1 + 1);
+                break;
+            
+            case iButton_1 ... iButton_5 :
+                ManualButtonByte |= 1<<(sensors[i] - iButton_1 + 1);
+                break;
+            
+            case iLight_1  ...  iLight5:
+                ManualLightByte |= 1<<(sensors[i] - iLight_1 + 1);
+                break;
+
+            case iJoystick_1 ... iJoystick_5 :
+                ManualJoystickByte |= 1<<(sensors[i] - iJoystick_1 + 1);
+                break;
+
+            case iQTR_1 ... iQTR_5 :
+                ManualQTRByte |= 1<<(sensors[i] - iQTR_1 + 1);
+                break;
+            
+            case iDistance_1 ... iDistance_5 :
+                ManualDistanceByte |= 1<<(sensors[i] - iDistance_1 + 1);
+                break;
+            
+            case iPot_1 ... iPot_5 :
+                ManualPotByte |= 1<<(sensors[i] - iPot_1 + 1);
+                break;
+            
+            case iIMU_1 ... iIMU_5 :
+                ManualIMUByte |= 1<<(sensors[i] - iIMU_1 + 1);
+                break;
+        }
+    }
+
+    _data[iHeader] = HEADER;
+    _data[iDeviceID] = _devId;
+    _data[iDeviceFamily] = DEVICE_FAMILY;
+    _data[iPackageSize] = CONSTANT_REG_SIZE + (size(uint8_t) + 1) * 10;
+    _data[iCommand] = WRITE;
+    _data[iStatus] = 0x00;
+
+    _data[DATA(0)] = iSetScanModuleMode;
+    _data[DATA(1)] = 1;
+
+    _data[DATA(2)] = iSetManualBuzzer;
+    _data[DATA(3)] = ManualBuzzerByte;
+
+    _data[DATA(4)] = iSetManualServo;
+    _data[DATA(5)] = ManualServoByte;
+
+    _data[DATA(6)] = iSetManualRGB;
+    _data[DATA(7)] = ManualRGBByte;
+
+    _data[DATA(8)] = iSetManualButton;
+    _data[DATA(9)] = ManualButtonByte;
+
+    _data[DATA(10)] = iSetManualLight;
+    _data[DATA(11)] = ManualLightByte;
+
+    _data[DATA(12)] = iSetManualJoystick;
+    _data[DATA(13)] = ManualJoystickByte;
+
+    _data[DATA(14)] = iSetManualQTR;
+    _data[DATA(15)] = ManualQTRByte;
+
+    _data[DATA(16)] = iSetManualDistance;
+    _data[DATA(17)] = ManualDistanceByte;
+
+    _data[DATA(18)] = iSetManualPot;
+    _data[DATA(19)] = ManualPotByte;
+
+    _data[DATA(20)] = iSetManualIMU;
+    _data[DATA(21)] = ManualIMUByte;
+
+    _addCRC();
+    _write2serial();
+}
+
+
+setConnectedModules([iBuzzer1, iBuzzer2, iRGB2], 3);
 
 uint8_t Red::getButton(int buttonID)
 {

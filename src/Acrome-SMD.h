@@ -159,7 +159,7 @@ typedef enum Index {
 	iIMU_3,
 	iIMU_4,
 	iIMU_5,
-  ConnectedBitfield,
+  iConnectedBitfield,
 	iCRCValue,
 } tProtocolIndex;
 
