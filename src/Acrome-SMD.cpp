@@ -859,8 +859,8 @@ void Red::printAvailableSensors(HardwareSerial &port)
 }
 
 void Red::setConnectedModules(uint8_t sensors[], uint8_t number_of_connected_sensors){
-    // Test in Progress
-    
+    // Tested ++
+
     uint8_t ManualBuzzerByte = 0;
     uint8_t ManualServoByte= 0;
     uint8_t ManualRGBByte= 0;
@@ -876,43 +876,43 @@ void Red::setConnectedModules(uint8_t sensors[], uint8_t number_of_connected_sen
     {
         switch (sensors[i]){
             case iBuzzer_1 ... iBuzzer_5 :
-                ManualBuzzerByte |= 1<<(sensors[i] - iBuzzer_1 + 1);
+                ManualBuzzerByte |= 1<<(sensors[i] - iBuzzer_1);
                 break;
 
             case iServo_1 ... iServo_5 :
-                ManualServoByte |= 1<<(sensors[i] - iServo_1 + 1);
+                ManualServoByte |= 1<<(sensors[i] - iServo_1);
                 break;
 
             case iRGB_1 ... iRGB_5 :
-                ManualRGBByte |= 1<<(sensors[i] - iRGB_1 + 1);
+                ManualRGBByte |= 1<<(sensors[i] - iRGB_1);
                 break;
             
             case iButton_1 ... iButton_5 :
-                ManualButtonByte |= 1<<(sensors[i] - iButton_1 + 1);
+                ManualButtonByte |= 1<<(sensors[i] - iButton_1);
                 break;
             
             case iLight_1  ...  iLight_5:
-                ManualLightByte |= 1<<(sensors[i] - iLight_1 + 1);
+                ManualLightByte |= 1<<(sensors[i] - iLight_1);
                 break;
 
             case iJoystick_1 ... iJoystick_5 :
-                ManualJoystickByte |= 1<<(sensors[i] - iJoystick_1 + 1);
+                ManualJoystickByte |= 1<<(sensors[i] - iJoystick_1);
                 break;
 
             case iQTR_1 ... iQTR_5 :
-                ManualQTRByte |= 1<<(sensors[i] - iQTR_1 + 1);
+                ManualQTRByte |= 1<<(sensors[i] - iQTR_1);
                 break;
             
             case iDistance_1 ... iDistance_5 :
-                ManualDistanceByte |= 1<<(sensors[i] - iDistance_1 + 1);
+                ManualDistanceByte |= 1<<(sensors[i] - iDistance_1);
                 break;
             
             case iPot_1 ... iPot_5 :
-                ManualPotByte |= 1<<(sensors[i] - iPot_1 + 1);
+                ManualPotByte |= 1<<(sensors[i] - iPot_1);
                 break;
             
             case iIMU_1 ... iIMU_5 :
-                ManualIMUByte |= 1<<(sensors[i] - iIMU_1 + 1);
+                ManualIMUByte |= 1<<(sensors[i] - iIMU_1);
                 break;
         }
     }
@@ -920,7 +920,7 @@ void Red::setConnectedModules(uint8_t sensors[], uint8_t number_of_connected_sen
     _data[iHeader] = HEADER;
     _data[iDeviceID] = _devId;
     _data[iDeviceFamily] = DEVICE_FAMILY;
-    _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(uint8_t) + 1) * 10;
+    _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(uint8_t) + 1) * 11;
     _data[iCommand] = WRITE;
     _data[iStatus] = 0x00;
 
@@ -959,6 +959,17 @@ void Red::setConnectedModules(uint8_t sensors[], uint8_t number_of_connected_sen
 
     _addCRC();
     _write2serial();
+
+    _data[iHeader] = HEADER;
+    _data[iDeviceID] = _devId;
+    _data[iDeviceFamily] = DEVICE_FAMILY;
+    _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(uint8_t) + 1) * 1;
+    _data[iCommand] = SCAN_MODULES;
+    _data[iStatus] = 0x00;
+
+    _addCRC();
+    _write2serial();
+
 }
 
 uint8_t Red::getButton(int buttonID)
