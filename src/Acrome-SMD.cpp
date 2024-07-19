@@ -10,7 +10,7 @@
 
 #define BUS_TIMEOUT (50)
 
-#define PING                (0x00)
+//#define PING                (0x00)   //   Re-Defined in Arduino Mega and Mega 2560
 #define WRITE               (0x01)
 #define WRITE_ACK           (0x80 | 0x01)
 #define READ                (0x02)
@@ -530,7 +530,7 @@ void Red::setOperationMode(tOperationMode mode)
 }
 
 void Red::goTo(float setPoint, float SCurveTimeSet, float SCurveMaxVelocity, float SCurveAccel)
-{ // Not Tested
+{ // Tested +
     _data[iHeader] = HEADER;
     _data[iDeviceID] = _devId;
     _data[iDeviceFamily] = DEVICE_FAMILY;
@@ -556,7 +556,7 @@ void Red::goTo(float setPoint, float SCurveTimeSet, float SCurveMaxVelocity, flo
 }
 
 void Red::setVelocityAccel(uint16_t accel)
-{ // Not Tested
+{ // Tested +
     _data[iHeader] = HEADER;
     _data[iDeviceID] = _devId;
     _data[iDeviceFamily] = DEVICE_FAMILY;
@@ -859,7 +859,8 @@ void Red::printAvailableSensors(HardwareSerial &port)
 }
 
 void Red::setConnectedModules(uint8_t sensors[], uint8_t number_of_connected_sensors){
-
+    // Test in Progress
+    
     uint8_t ManualBuzzerByte = 0;
     uint8_t ManualServoByte= 0;
     uint8_t ManualRGBByte= 0;
@@ -890,7 +891,7 @@ void Red::setConnectedModules(uint8_t sensors[], uint8_t number_of_connected_sen
                 ManualButtonByte |= 1<<(sensors[i] - iButton_1 + 1);
                 break;
             
-            case iLight_1  ...  iLight5:
+            case iLight_1  ...  iLight_5:
                 ManualLightByte |= 1<<(sensors[i] - iLight_1 + 1);
                 break;
 
@@ -919,7 +920,7 @@ void Red::setConnectedModules(uint8_t sensors[], uint8_t number_of_connected_sen
     _data[iHeader] = HEADER;
     _data[iDeviceID] = _devId;
     _data[iDeviceFamily] = DEVICE_FAMILY;
-    _data[iPackageSize] = CONSTANT_REG_SIZE + (size(uint8_t) + 1) * 10;
+    _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(uint8_t) + 1) * 10;
     _data[iCommand] = WRITE;
     _data[iStatus] = 0x00;
 
@@ -959,9 +960,6 @@ void Red::setConnectedModules(uint8_t sensors[], uint8_t number_of_connected_sen
     _addCRC();
     _write2serial();
 }
-
-
-setConnectedModules([iBuzzer1, iBuzzer2, iRGB2], 3);
 
 uint8_t Red::getButton(int buttonID)
 {
@@ -1278,7 +1276,7 @@ uint16_t Red::getDistance(int distanceID)
 QTRValues Red::getQTR(int qtrID)
 {
     if(!_checkModuleID(qtrID)){
-        return;
+        return {0};
     }
     uint8_t ProtocolID = iQTR_1 + qtrID -1;
 

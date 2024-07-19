@@ -244,7 +244,7 @@ class Red {
     void setTimeout(uint16_t timeout);                                                              //$
     
     void goTo(float setPoint, float SCurveTimeSet, float SCurveMaxVelocity, float SCurveAccel);
-    void Red::setVelocityAccel(uint16_t accel);
+    void setVelocityAccel(uint16_t accel);
 
     float getPosition();                                                                            //$
     float getVelocity();                                                                            //$
@@ -259,6 +259,7 @@ class Red {
     void setBuzzer(int buzzerID, uint32_t frequency);                 //$
     void setServo(int servoID, uint8_t ctrl);                         //$
     void setRGB(int rgbID, uint8_t red, uint8_t green, uint8_t blue); //$
+    void setConnectedModules(uint8_t sensors[], uint8_t number_of_connected_sensors);
 
     // Get
     uint8_t   getButton(int buttonID);      //$
