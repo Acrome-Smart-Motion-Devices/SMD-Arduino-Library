@@ -732,6 +732,21 @@ uint8_t *Red::scanModules()
     _data[iDeviceID] = _devId;
     _data[iDeviceFamily] = DEVICE_FAMILY;
     _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(uint8_t) + 1) * 1;
+    _data[iCommand] = WRITE;
+    _data[iStatus] = 0x00;
+
+    _data[DATA(0)] = iSetScanModuleMode;
+    _data[DATA(1)] = 0;
+
+    _addCRC();
+    _write2serial();
+
+    delay(50);
+    
+    _data[iHeader] = HEADER;
+    _data[iDeviceID] = _devId;
+    _data[iDeviceFamily] = DEVICE_FAMILY;
+    _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(uint8_t) + 1) * 1;
     _data[iCommand] = SCAN_MODULES;
     _data[iStatus] = 0x00;
 
@@ -743,14 +758,12 @@ uint8_t *Red::scanModules()
     _data[iHeader] = HEADER;
     _data[iDeviceID] = _devId;
     _data[iDeviceFamily] = DEVICE_FAMILY;
-    _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(uint8_t)) * 3;
+    _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(uint8_t)) * 1;
     _data[iCommand] = READ;
     _data[iStatus] = 0x00;
 
     _data[DATA(0)] = iConnectedBitfield;
     
-    _data[DATA(1)] = iSetScanModuleMode;
-    _data[DATA(2)] = 0;
 
     _addCRC();
     _write2serial();
