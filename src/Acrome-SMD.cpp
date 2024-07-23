@@ -772,24 +772,24 @@ uint8_t *Red::scanModules()
     _write2serial();
 
     // package size , SCAN_MODULES , 64bit
-    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(uint64_t)) * 1) == true)
+    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(uint64_t) + 1) * 1) == true)
     {
-        if ((_checkCRC() == true) && (headerCheck(_devId, SCAN_MODULES) == true))
+        if ((_checkCRC() == true) && (headerCheck(_devId, READ) == true))
         {
+            if (_data[DATA(0)] == iConnectedBitfield)
+            {
+                // update and fill local sensor value
+                _sensors[0] = _data[DATA(1)];
+                _sensors[1] = _data[DATA(2)];
+                _sensors[2] = _data[DATA(3)];
+                _sensors[3] = _data[DATA(4)];
+                _sensors[4] = _data[DATA(5)];
+                _sensors[5] = _data[DATA(6)];
+                _sensors[6] = _data[DATA(7)];
+                _sensors[7] = _data[DATA(8)];
 
-            // update and fill local sensor value
-            uint8_t *ptr = _getU8_ptr(DATA(0));
-
-            _sensors[0] = *(ptr);
-            _sensors[1] = *(ptr + 1);
-            _sensors[2] = *(ptr + 2);
-            _sensors[3] = *(ptr + 3);
-            _sensors[4] = *(ptr + 4);
-            _sensors[5] = *(ptr + 5);
-            _sensors[6] = *(ptr + 6);
-            _sensors[7] = *(ptr + 7);
-
-            return _sensors;
+                return _sensors;
+            }
         }
     }
     return 0;
@@ -988,7 +988,6 @@ void Red::setConnectedModules(uint8_t sensors[], uint8_t number_of_connected_sen
 
     _addCRC();
     _write2serial();
-
 }
 
 uint8_t Red::getButton(int buttonID)
