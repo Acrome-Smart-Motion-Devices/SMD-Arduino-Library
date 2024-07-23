@@ -728,6 +728,9 @@ uint16_t Red::getAnalogPort()
 
 uint8_t *Red::scanModules()
 {
+
+    // Bugs Found (Packet problems)
+
     _data[iHeader] = HEADER;
     _data[iDeviceID] = _devId;
     _data[iDeviceFamily] = DEVICE_FAMILY;
@@ -746,7 +749,7 @@ uint8_t *Red::scanModules()
     _data[iHeader] = HEADER;
     _data[iDeviceID] = _devId;
     _data[iDeviceFamily] = DEVICE_FAMILY;
-    _data[iPackageSize] = CONSTANT_REG_SIZE + (sizeof(uint8_t) + 1) * 1;
+    _data[iPackageSize] = CONSTANT_REG_SIZE;
     _data[iCommand] = SCAN_MODULES;
     _data[iStatus] = 0x00;
 
