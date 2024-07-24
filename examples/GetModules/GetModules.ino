@@ -31,7 +31,7 @@
 
 int ModuleIDs = 1;
 
-Red myRed(ID, Serial, BAUDRATE);
+Red myRed(ID, Serial3, BAUDRATE);
 
 int buttonVal = 0;
 int lightVal  = 0;

@@ -46,7 +46,7 @@ void setup() {
   red1.setMotorCPR(CPR);
 
   red1.setOperationMode(PositionControl); // setting operation mode to position
-  red1.setControlParameters(PositionControl, 10, 0, 1, 0, 5) // setting pid and other control parameters of position control mode.
+  red1.setControlParameters(PositionControl, 10, 0, 1, 0, 5); // setting pid and other control parameters of position control mode.
   red1.torqueEnable(1);
   red1.scanModules();
   delay(50);

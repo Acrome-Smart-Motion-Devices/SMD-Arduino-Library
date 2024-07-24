@@ -32,7 +32,7 @@
 
 float RPM = 100;
 float CPR = 4741;
-int DistanceModuleID = 01
+int DistanceModuleID = 1;
 
 Red red1(ID, Serial, BAUDRATE);
 int distance = 0;
