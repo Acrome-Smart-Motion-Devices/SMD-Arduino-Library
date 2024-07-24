@@ -1323,15 +1323,15 @@ QTRValues Red::getQTR(int qtrID)
 
     _write2serial();
 
-    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(uint8_t) + 1) * 3) == true)
+    if (_readFromSerial(CONSTANT_REG_SIZE + (sizeof(uint8_t) * 3) + 1) == true)
     {
         if ((_checkCRC() == true) && (headerCheck(_devId, READ) == true))
         {
             if (_data[DATA(0)] == ProtocolID)
             {
-                qtrlist.LeftValue =    _data[DATA(1)];
+                qtrlist.LeftValue =    _data[DATA(3)];
                 qtrlist.MiddleValue =  _data[DATA(2)];
-                qtrlist.RightValue =   _data[DATA(3)];
+                qtrlist.RightValue =   _data[DATA(1)];
                 
                 return qtrlist;
             }

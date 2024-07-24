@@ -33,8 +33,8 @@
 #define ID          0
 
 float RPM = 100;
-float CPR = 4741;
-int rgbID = 0;
+float CPR = 6533;
+int rgbID = 1;
 
 Red red1(ID, Serial, BAUDRATE);
 float step = 1000.0;
@@ -56,27 +56,27 @@ void loop() {
   // It continuously changes the position and sets rgb module with colors.
   red1.setpoint(PositionControl, 0*step);
   delay(1000);
-  red1.setRGB(0, RED);
+  red1.setRGB(rgbID, 255,0,0);            //RED
   
   red1.setpoint(PositionControl, 1*step);
   delay(1000);
-  red1.setRGB(0, GREEN);
+  red1.setRGB(rgbID, 0,255,0);            //GREEN
 
   red1.setpoint(PositionControl, 2*step);
   delay(1000);
-  red1.setRGB(0, BLUE);
+  red1.setRGB(rgbID, 0,0,255);            //BLUE
 
   red1.setpoint(PositionControl, 3*step);
   delay(1000);
-  red1.setRGB(0, WHITE);
+  red1.setRGB(0, 255,255,255);            //WHITE
 
   red1.setpoint(PositionControl, 1*step);
   delay(1000);
-  red1.setRGB(0, GREEN);
+  red1.setRGB(0, 0,255,0);                //GREEN
 
   red1.setpoint(PositionControl, 4*step);
   delay(2000);
-  red1.setRGB(0, NO_COLOR);
+  red1.setRGB(0, 0,0,0);                  //NO COLOR
   
 
 }

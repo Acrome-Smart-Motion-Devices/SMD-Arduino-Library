@@ -29,7 +29,7 @@
 #define ID          0
 
 float RPM = 100;
-float CPR = 4741;
+float CPR = 6533;
 
 Red red1(ID, Serial, BAUDRATE);
 float step = 1000.0;

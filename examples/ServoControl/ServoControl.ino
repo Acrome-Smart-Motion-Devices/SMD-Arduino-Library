@@ -1,11 +1,11 @@
 // ---------------------------------------------------------------------------
-//  Example of Acrome SMD Red Position Control with Arduino.
+//  Example of Acrome SMD Red Position Control (Servo) with Arduino.
 //
-//  This code allows the DC brushed motor attached to the 
+//  This code allows the Servo motor attached to the 
 //  SMD-Red(Smart Motor Driver - Red) to reach predefined positions 
 //  at regular time intervals, continuously repeating the specified sequence.
 //
-//  Example Code by : Berat Eren Dogan / Acrome Robotics
+//  Example Code by : Zubeyir Bakacak / Acrome Robotics
 // ---------------------------------------------------------------------------
 //  WARNING: To run this code make sure you have the following hardware components:
 //
@@ -13,9 +13,8 @@
 //
 //  2. Arduino Gateway: Connect the Arduino Gateway to your Arduino board. Note that the Gateway should NOT be attached while uploading the code.
 //
-//  3. DC Motor: Connect the DC Motor to the SMD. Check the motor specifications for proper wiring.
+//  3. Servo Motor: Connect the Servo Motor to the SMD. Check the motor specifications for proper wiring.
 //
-//  NOTE: Please set the correct values for CPR (Counts Per Revolution) and RPM (Revolutions Per Minute) based on your specific motor. Update the 'CPR' and 'RPM' variables in the code accordingly.
 //  
 //  IMPORTANT: Do not have the Gateway attached to your Arduino when uploading the code. Only attach the Gateway after the code upload is complete.
 //  This is crucial for proper initialization. Once the code is uploaded, attach the Gateway and establish the connection with the SMD as required.
@@ -27,33 +26,32 @@
 
 #define BAUDRATE    115200
 #define ID          0
-
-float RPM = 100;
-float CPR = 6533;
+#define ServoID     1
 
 Red red1(ID, Serial, BAUDRATE);
 
-void setup() {
-  red1.begin(); 
- 
-  red1.setMotorRPM(RPM); 
-  red1.setMotorCPR(CPR);
+void setup()
+{
+    red1.begin();
+    red1.scanModules();
 
-  red1.setOperationMode(VelocityControl); // setting operation mode to position
-  red1.setControlParameters(VelocityControl, 10, 1, 0, 0, 5); // setting pid and other control parameters of position control mode.
-  red1.torqueEnable(1);
+    delay(100);
 }
 
-void loop() {
-  // It continuously changes the velocity(rpm) setpoint at regular time intervals.
-  red1.setpoint(VelocityControl, 0);
-  delay(1500);
-  red1.setpoint(VelocityControl, RPM*0.25);
-  delay(1500);
-  red1.setpoint(VelocityControl, RPM*0.5);
-  delay(1500);
-  red1.setpoint(VelocityControl, RPM*0.75);
-  delay(1500);
-  red1.setpoint(VelocityControl, RPM*0.9);
-  delay(1500);
+void loop()
+{
+    red1.setServo(ServoID,0);
+    delay(850);
+
+    red1.setServo(ServoID,45);
+    delay(250);
+
+    red1.setServo(ServoID,90);
+    delay(250);
+
+    red1.setServo(ServoID,135);
+    delay(250);
+
+    red1.setServo(ServoID,180);
+    delay(500);
 }

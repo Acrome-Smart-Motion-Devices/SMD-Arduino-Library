@@ -30,7 +30,7 @@
 #define BAUDRATE    115200
 #define ID          0
 
-int buttonModuleID = 0;
+int buttonModuleID = 1;
 
 Red red1(ID, Serial, BAUDRATE);
 int dutycylce = 0;
