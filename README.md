@@ -316,6 +316,17 @@ For a detailed guide on library functions and usage, please review the full docu
       }
       void loop(){}
     ```
+ 
+    ### Red - goTo(SP, TS, MV, SCA)
+    The function `goTo(float setPoint, float SCurveTimeSet, float SCurveMaxVelocity, float SCurveAccel)` is used to control a system,
+    typically involving motion or position. Here’s a brief explanation of its parameters:
+
+  - **`setPoint`**: This parameter represents the target position or value that the system should reach.
+  - **`SCurveTimeSet`**: This specifies the time duration over which the motion should follow an S-curve profile, which helps in smoothing acceleration and deceleration.
+  - **`SCurveMaxVelocity`**: This defines the maximum velocity the system should achieve while moving towards the `setPoint`.
+  - **`SCurveAccel`**: This indicates the rate of acceleration to be used in the S-curve profile.
+
+The function uses these parameters to smoothly guide the system from its current position to the desired `setPoint` while managing velocity and acceleration to ensure smooth and controlled movement.
 
   - ### `Red - setPositionLimits()`
     Sets the position limits of the SMD. You should set the limits if you drive a motor as positional control.
