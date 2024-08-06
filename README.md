@@ -463,6 +463,28 @@ For a detailed guide on library functions and usage, please review the full docu
     **`Return:`** `uint8_t*`:
     This method returns a pointer to an 8-element `uint8_t` array where each bit represents the status of the scanned sensors. Each bit indicates whether a sensor is present or not.
 
+
+- ### `Red - setConnectedModules(uint8_t sensors[], uint8_t number_of_connected_sensors)`
+    The function `setConnectedModules(uint8_t sensors[], uint8_t number_of_connected_sensors)` is used to configure or initialize a set of sensor modules. Here’s a brief overview of its parameters and purpose:
+
+- **`sensors[]`**: This is an array of `uint8_t` (unsigned 8-bit integers) where each element represents an identifier or a type of sensor that is connected.
+- You can use sensors with this (for example: iQTR_1 ... iQTR_5 - number at the end of the name is used for sensor IDs)
+- All Sensor definitions:
+- iBuzzer_x
+- iServo_x
+- iRGB_x
+- iButton_x
+- iLight_x
+- iJoystick_x
+- iDistance_x
+- iQTR_x
+- iPot_x
+- iIMU_x
+  
+- **`number_of_connected_sensors`**: This parameter specifies the total number of sensors that are connected and should be processed.
+
+The function takes these inputs to set up or update the configuration of the connected sensors in the system, allowing the program to recognize and interact with the specific sensors that are present.
+
   - ### `availableSensors()`
     This method prints the connected sensors and their IDs to the arduino's serial monitor, taking from the information recorded in the last scan.
     
@@ -493,31 +515,18 @@ For a detailed guide on library functions and usage, please review the full docu
 
     **`Return:`** `None`
 
-  - ### `Red - setRGB()`
-    The setRGB() method is used to control an RGB (Red, Green, Blue) LED module by specifying the intensity or color values for each of the RGB components.
-
-    Colors available in RGB sensor module :
-    - RED,
-    - GREEN,
-    - BLUE,
-    - WHITE,
-    - YELLOW,
-    - CYAN,
-    - MAGENTA,
-    - ORANGE,
-    - PURPLE,
-    - PINK,
-    - AMBER,
-    - TEAL,
-    - INDIGO
-
-    In the method, you can use these colors in the same way as capital letters or you can use numbers from 0 to 12. For example 0 for red    
+  - ### `Red - setRGB(uint8_t RGB_ID, uint8_t red, uint8_t green, uint8_t blue)`
+  -   This function used for setting color for RGB LED Module.
+  -   RGB_ID for ID of RGB LED module
+  -   'red', 'green', 'blue' for RGB LED values (0-255)
 
     ### Syntax
-    #### `myRed.setRGB(RGB_ID, color);`
+    #### `myRed.setRGB(RGB_ID, Red, Green, Blue);`
     - `myRed`: a variable of type `Red`
     - `RGB_ID`: a varaible of type `int`
-    - `color`: a variable of type `uint8_t` 
+    - `Red`: a variable of type `uint8_t` 
+    - `Green`: a variable of type `uint8_t` 
+    - `Blue`: a variable of type `uint8_t` 
 
     **`Return:`** `None`
 
@@ -715,6 +724,41 @@ For a detailed guide on library functions and usage, please review the full docu
   void loop(){
   }
   ```
+
+  ### Example of read QTR Reflectance Module
+```cpp
+ #include <Acrome-SMD.h>
+
+ #define BAUDRATE    115200
+ #define ID          0
+ #define QTRID       1
+
+
+ Red red1(ID, Serial3, BAUDRATE);          
+
+
+ void setup()
+ {
+     red1.begin();               //Start the SMD-RED
+     Serial.begin(BAUDRATE);     //Start the Serial communication
+     red1.scanModules();         //Scan all modules
+     delay(200);
+ }
+
+ void loop()
+ {
+     QTRValues qtrValues = red1.getQTR(QTRID);        //Create QTR Object
+     uint8_t QTRArray[]={qtrValues.LeftValue, qtrValues.MiddleValue, qtrValues.RightValue}; //Write QTR Values into QTR Array
+
+     Serial.print(QTRArray[0]);          //
+     Serial.print(" , ");                //
+     Serial.print(QTRArray[1]);          // Print QTR Values
+     Serial.print(" , ");                //
+     Serial.println(QTRArray[2]);        //
+
+     delay(50);
+ }
+```
 
   ### Example of Velocity Control
   ```cpp
