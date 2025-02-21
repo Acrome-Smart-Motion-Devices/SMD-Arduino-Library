@@ -10,7 +10,7 @@
 
 #define BUS_TIMEOUT (50)
 
-//#define PING                (0x00)   //   Re-Defined in Arduino Mega and Mega 2560
+#define DEV_PING            (0x00)
 #define WRITE               (0x01)
 #define WRITE_ACK           (0x80 | 0x01)
 #define READ                (0x02)
@@ -250,13 +250,14 @@ Red::Red(uint8_t ID, HardwareSerial &port, uint32_t baudrate)
     _delayMicros = (120000000U / baudrate); // updated. ====//==== _delayMicros = (105000000U / baudrate);  1 One byte long delay time + %5 for safety
 }
 
+
 bool Red::Ping()
 { // tested +
     _data[iHeader] = HEADER;
     _data[iDeviceID] = _devId;
     _data[iDeviceFamily] = DEVICE_FAMILY;
     _data[iPackageSize] = CONSTANT_REG_SIZE;
-    _data[iCommand] = PING;
+    _data[iCommand] = DEV_PING;
     _data[iStatus] = 0x00;
 
     _addCRC();
