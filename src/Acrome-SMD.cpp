@@ -265,7 +265,7 @@ bool Red::Ping()
 
     if (_readFromSerial(CONSTANT_REG_SIZE) == true)
     {
-        if ((_checkCRC() == true) && (headerCheck(_devId, PING) == true))
+        if ((_checkCRC() == true) && (headerCheck(_devId, DEV_PING) == true))
         {
             return true;
         }
